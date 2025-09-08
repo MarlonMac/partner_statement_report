@@ -3,86 +3,176 @@
     <template id="statement_template">
         <t t-call="web.html_container">
             <t t-foreach="report_data" t-as="data">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <div class="oe_structure"/>
+                <t t-set="company_partner" t-value="company.partner_id"/>
+                <div class="article o_report_layout_clean" t-att-data-company-id="company.id">
 
-                        <h2>Estado de Cuenta</h2>
-
-                        <div class="row mt32 mb32">
-                            <div class="col-6">
-                                <strong>Cliente:</strong>
-                                <p t-esc="data['partner'].name"/>
-                                <div t-call-widget="'contact'" t-value="data['partner']"
-                                     t-options='{"fields": ["address", "phone", "email"]}'/>
-                            </div>
-                            <div class="col-6 text-end">
-                                <strong>Fecha del Reporte:</strong> <span
-                                    t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/><br/>
-                                <strong>Periodo:</strong> de <span t-esc="docs.date_from.strftime('%Y-%m-%d')"/> a <span
-                                    t-esc="docs.date_to.strftime('%Y-%m-%d')"/>
+                    <div class="header">
+                        <div class="row mt42 mb1">
+                            <div class="col-2"><img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 55px; margin-top:40px;"/></div>
+                            <div class="col-10 text-right" style="font:13px lucida-console,sans-serif !important; text-align: left; padding-top:11px; padding-left:60px;">
+                                <br/><span style="font-size:30px;"><span t-field="company_partner.name"/></span><br/>
+                                <div style="margin-top:-10px;"><span><span t-if="company_partner.street" t-field="company_partner.street"/> <span t-if="company_partner.city" t-field="company_partner.city"/>, <span t-if="company_partner.state_id.name" t-field="company_partner.state_id.name"/> NIT: <span t-if="company_partner.vat" t-field="company_partner.vat"/></span></div>
+                                <div style="font-family: lucida-console;"><span><span t-if="company.x_razon_social" t-field="company.x_razon_social"/> - Email: <span t-if="company_partner.email" t-field="company_partner.email"/> Contacto: <span t-if="company_partner.phone" t-field="company_partner.phone"/></span></div>
                             </div>
                         </div>
-
-                        <table class="table table-sm o_main_table">
-                            <thead>
-                                <tr>
-                                    <th name="th_date" class="text-start">Fecha</th>
-                                    <th name="th_document" class="text-start">Documento</th>
-                                    <th name="th_description" class="text-start">Descripción</th>
-                                    <th name="th_debit" class="text-end">Debe</th>
-                                    <th name="th_credit" class="text-end">Haber</th>
-                                    <th name="th_balance" class="text-end">Saldo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="5"><strong>Saldo Inicial</strong></td>
-                                    <td class="text-end">
-                                        <span t-esc="data['initial_balance']"
-                                              t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
-                                    </td>
-                                </tr>
-                                <t t-foreach="data['lines']" t-as="line">
-                                    <tr>
-                                        <td><span t-esc="line['date'].strftime('%Y-%m-%d')"/></td>
-                                        <td><span t-esc="line['document']"/></td>
-                                        <td><span t-esc="line['description']"/></td>
-                                        <td class="text-end"><span t-esc="line['debit']"
-                                                                  t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
-                                        <td class="text-end"><span t-esc="line['credit']"
-                                                                  t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
-                                        <td class="text-end"><span t-esc="line['balance']"
-                                                                  t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
-                                    </tr>
-                                </t>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5" class="text-end"><strong>Saldo Final</strong></td>
-                                    <td class="text-end">
-                                        <strong>
-                                            <span t-esc="data['final_balance']"
-                                                  t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
-                                        </strong>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-
-                        <div class="row mt32">
-                            <div class="col-12">
-                                <p>
-                                    <t t-if="data['final_balance'] &gt; 0">Saldo adeudado a favor de <span
-                                        t-esc="company.name"/>.</t>
-                                    <t t-if="data['final_balance'] &lt; 0">Saldo a favor del cliente.</t>
-                                    <t t-if="data['final_balance'] == 0">No hay saldo pendiente.</t>
-                                </p>
-                            </div>
-                        </div>
-
                     </div>
-                </t>
+
+                    <div class="footer">
+                         <div style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10px; border-top: 1px solid #dee2e6; padding-top: 8px; margin: 0 15px;">
+                            <div class="row">
+                                <div class="col-10 text-left">
+                                    <strong>Políticas de Pago:</strong> Agradecemos realizar sus pagos antes de la fecha de vencimiento. Cualquier pago realizado después de la fecha límite puede estar sujeto a cargos por mora.
+                                    Para consultas sobre su estado de cuenta, por favor contacte a nuestro departamento de contabilidad.
+                                </div>
+                                <div class="col-2 text-right">
+                                    Página <span class="page"/> / <span class="topage"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="page">
+                        <style>
+                            .statement-body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; color: #4J4J4J; }
+                            .customer-area, .summary-area { margin-bottom: 32px; }
+                            .text-right { text-align: right; }
+                            .summary-box {
+                                border: 1px solid #e9ecef; padding: 12px; border-radius: 4px;
+                                background-color: #f8f9fa; height: 100%;
+                            }
+                            h2 { font-size: 24px; font-weight: lighter; margin: 0; padding: 0;}
+                            th {
+                                font-weight: bold; border: none;
+                                border-bottom: 2px solid #adb5bd; padding: 8px 4px;
+                            }
+                            td { border: none; padding: 10px 4px; vertical-align: middle; }
+                            tbody tr { border-bottom: 1px solid #f0f0f0; }
+                            .color-bar { width: 4px; padding: 0 !important; }
+                            .bar-green { background-color: #D5F5E3 !important; }
+                            .bar-red { background-color: #FADBD8 !important; }
+                            .bar-blue { background-color: #D6EAF8 !important; }
+                        </style>
+
+                        <div class="statement-body">
+                            <div class="row" style="margin-bottom: 24px;">
+                                <div class="col-7"><h2>Estado de Cuenta</h2></div>
+                                <div class="col-5 text-right" style="padding-top: 8px;">
+                                    <strong>Periodo:</strong>
+                                    <span t-esc="docs.date_from.strftime('%d/%m/%Y')"/> a
+                                    <span t-esc="docs.date_to.strftime('%d/%m/%Y')"/>
+                                </div>
+                            </div>
+
+                             <div class="row customer-area">
+                                <div class="col-8">
+                                    <strong>Cliente:</strong><br/>
+                                    <strong t-esc="data['partner'].name"/>
+                                    <div t-if="data['partner'].vat">NIT: <span t-esc="data['partner'].vat"/></div>
+                                    <div t-if="data['partner'].street">
+                                        <span t-esc="data['partner'].street"/>
+                                        <t t-if="data['partner'].street2">, <span t-esc="data['partner'].street2"/></t>
+                                        <br/>
+                                        <t t-if="data['partner'].city"><span t-esc="data['partner'].city"/></t>
+                                        <t t-if="data['partner'].state_id">, <span t-esc="data['partner'].state_id.name"/></t>
+                                        <t t-if="data['partner'].country_id">, <span t-esc="data['partner'].country_id.name"/></t>
+                                    </div>
+                                </div>
+                                <div class="col-4 text-right">
+                                    <t t-if="data['partner'].property_product_pricelist">
+                                        <strong>Tipo de cliente:</strong><br/>
+                                        <span t-field="data['partner'].property_product_pricelist"/><br/>
+                                    </t>
+                                    <t t-if="data['partner'].property_payment_term_id">
+                                        <strong>Plazo de Autorizado:</strong><br/>
+                                        <span t-field="data['partner'].property_payment_term_id"/>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="row summary-area" style="display: flex; flex-wrap: wrap;">
+                                <div class="col-4"><div class="summary-box">
+                                    <strong>Saldo Inicial</strong><br/>
+                                    <span t-esc="data['initial_balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                </div></div>
+                                <div class="col-4"><div class="summary-box">
+                                    <strong>Saldo Final</strong><br/>
+                                    <span t-esc="data['final_balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                </div></div>
+                                <div class="col-4"><div class="summary-box">
+                                    <strong>Estado</strong><br/>
+                                    <span>
+                                        <t t-if="data['final_balance'] > 0.01">Saldo Pendiente</t>
+                                        <t t-if="data['final_balance'] &lt; -0.01">Saldo a Favor</t>
+                                        <t t-if="data['final_balance'] &gt;= -0.01 and data['final_balance'] &lt;= 0.01">Al día</t>
+                                    </span>
+                                </div></div>
+                            </div>
+
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 4px; padding: 0;"></th>
+                                        <th class="text-start">Fecha</th>
+                                        <th class="text-start">Documento</th>
+                                        <th class="text-start" style="width: 40%;">Descripción</th>
+                                        <th class="text-end">Cargo (-)</th>
+                                        <th class="text-end">Abono (+)</th>
+                                        <th class="text-end">Saldo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 0;"></td>
+                                        <td colspan="5"><strong>Saldo Inicial</strong></td>
+                                        <td class="text-end"><span t-esc="data['initial_balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
+                                    </tr>
+                                    <t t-foreach="data['lines']" t-as="line">
+                                        <tr>
+                                            <td t-attf-class="color-bar {{ 'bar-red' if line['type'] == 'Factura' else '' }} {{ 'bar-green' if line['type'] in ['Pago', 'Nota de Crédito'] else '' }} {{ 'bar-blue' if line['type'] == 'Asiento Manual' else '' }}"/>
+                                            <td><span t-esc="line['date'].strftime('%d/%m/%Y')"/></td>
+                                            <td><span t-esc="line['document']"/></td>
+                                            <td><strong><span t-esc="line['type']"/>:</strong> <span t-esc="line['description']"/></td>
+                                            <td class="text-end"><span t-if="line['debit']" t-esc="line['debit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
+                                            <td class="text-end"><span t-if="line['credit']" t-esc="line['credit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
+                                            <td class="text-end"><span t-esc="line['balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                </table>
+
+                            <div class="row">
+                                <div class="col-6 offset-6">
+                                    <table class="table table-sm" style="border-top: 2px solid #adb5bd;">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-start"><strong>Total de Cargos del Periodo</strong></td>
+                                                <td class="text-end">
+                                                    <span t-esc="data['total_debit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-start"><strong>Total de Abonos del Periodo</strong></td>
+                                                <td class="text-end">
+                                                    <span t-esc="data['total_credit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                            <tr style="font-weight: bold;">
+                                                <td class="text-start">
+                                                    <t t-if="data['final_balance'] > 0.01">Saldo Pendiente</t>
+                                                    <t t-if="data['final_balance'] &lt; -0.01">Saldo a Favor</t>
+                                                    <t t-if="data['final_balance'] &gt;= -0.01 and data['final_balance'] &lt;= 0.01">Saldo Final</t>
+                                                </td>
+                                                <td class="text-end">
+                                                    <span t-esc="data['final_balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </t>
         </t>
     </template>

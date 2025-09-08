@@ -11,27 +11,15 @@ class PartnerStatementReport(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         wizard = self.env['partner.statement.wizard'].browse(docids)
-        
-        _logger.info("--- INICIO REPORTE ESTADO DE CUENTA ---")
-        _logger.info("ID del Asistente (docids): %s", docids)
-        if not wizard.exists():
-            _logger.error("Error: No se encontró el asistente con ID %s", docids)
-            return {}
-
         partners = wizard.partner_ids
-        _logger.info("Clientes a procesar: %s", partners.mapped('name'))
 
         receivable_accounts = self.env['account.account'].search([
             ('account_type', '=', 'asset_receivable'),
-            ('company_id', 'in', [self.env.company.id, False]) # Filtro de compañía añadido
+            ('company_id', 'in', [self.env.company.id, False])
         ])
-        _logger.info("Cuentas por cobrar encontradas: %s", receivable_accounts.ids)
 
         report_data = []
         for partner in partners:
-            _logger.info("Procesando partner: %s (ID: %s)", partner.name, partner.id)
-            
-            # 1. Calcular Saldo Inicial
             domain_initial = [
                 ('partner_id', '=', partner.id),
                 ('account_id', 'in', receivable_accounts.ids),
@@ -40,9 +28,7 @@ class PartnerStatementReport(models.AbstractModel):
             ]
             initial_lines = self.env['account.move.line'].search(domain_initial)
             initial_balance = sum(initial_lines.mapped('debit')) - sum(initial_lines.mapped('credit'))
-            _logger.info("Líneas para saldo inicial: %s. Saldo inicial calculado: %s", len(initial_lines), initial_balance)
 
-            # 2. Obtener Movimientos en el Rango
             domain_moves = [
                 ('partner_id', '=', partner.id),
                 ('account_id', 'in', receivable_accounts.ids),
@@ -51,12 +37,26 @@ class PartnerStatementReport(models.AbstractModel):
                 ('parent_state', '=', 'posted'),
             ]
             move_lines = self.env['account.move.line'].search(domain_moves, order='date asc, id asc')
-            _logger.info("Líneas de movimiento encontradas en el periodo: %s", len(move_lines))
 
             lines_data = []
             balance = initial_balance
+
+            total_debit = 0.0
+            total_credit = 0.0
+            
             for line in move_lines:
                 balance += line.debit - line.credit
+                total_debit += line.debit
+                total_credit += line.credit
+                
+                line_type = 'Asiento Manual'
+                if line.move_id.move_type == 'out_invoice':
+                    line_type = 'Factura'
+                elif line.move_id.move_type == 'out_refund':
+                    line_type = 'Nota de Crédito'
+                elif line.payment_id:
+                    line_type = 'Pago'
+
                 lines_data.append({
                     'date': line.date,
                     'document': line.move_id.name,
@@ -64,6 +64,7 @@ class PartnerStatementReport(models.AbstractModel):
                     'debit': line.debit,
                     'credit': line.credit,
                     'balance': balance,
+                    'type': line_type,
                 })
 
             report_data.append({
@@ -71,11 +72,10 @@ class PartnerStatementReport(models.AbstractModel):
                 'initial_balance': initial_balance,
                 'lines': lines_data,
                 'final_balance': balance,
+                'total_debit': total_debit,
+                'total_credit': total_credit,
             })
         
-        _logger.info("Estructura de datos final a enviar al template: %s", report_data)
-        _logger.info("--- FIN REPORTE ESTADO DE CUENTA ---")
-
         return {
             'doc_ids': docids,
             'doc_model': 'partner.statement.wizard',
