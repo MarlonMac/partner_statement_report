@@ -1,34 +1,31 @@
 # Changelog
+All notable changes to this project will be documented in this file.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [Unreleased]
 
-El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+## [16.0.1.2.0] - 2025-09-08
 
-## [1.1.0] - 2025-09-08
+### Added
+- **Panel de Configuración**: Nueva sección en `Ajustes > Contabilidad` para gestionar el módulo.
+- **Activación por Compañía**: Se añadió un booleano para activar o desactivar la funcionalidad por empresa.
+- **Footer Personalizado**: Opción para habilitar y editar un pie de página personalizado en formato HTML.
+- **Grupo de Seguridad**: Se creó el grupo `Generar Estados de Cuenta` para controlar el acceso a la funcionalidad.
 
 ### Changed
+- **Ubicación de Ajustes**: La configuración ahora está integrada dentro de los ajustes de Contabilidad en lugar de ser una pestaña independiente.
 
--   **Rediseño visual completo** del reporte a un estilo ejecutivo y minimalista.
--   Reemplazo de la información del asesor de ventas por **Lista de Precios** y **Plazo de Pago**.
--   **Alineación de layout** mejorada en el encabezado y secciones de resumen.
--   Se eliminaron líneas horizontales innecesarias para un diseño más limpio.
--   Se ajustaron los colores de las barras de estado para ser más sutiles.
+### Fixed
+- **Error de Carga de Modelos**: Solucionado un `ParseError` al actualizar el módulo, asegurando que los modelos Python se carguen antes que las vistas XML mediante la correcta importación en `__init__.py`.
+- **Error de XPath en Ajustes**: Corregido el selector `xpath` para posicionar la vista de ajustes de forma estable usando el `data-key` del módulo de contabilidad.
+- **Error de Método en Wizard**: Corregido el nombre del método en la vista del wizard para que coincida con el definido en el modelo Python, solucionando un `ParseError`.
+- **Alineación del Pie de Página**: Eliminado un margen innecesario en el footer para que la paginación se alinee correctamente al extremo derecho del reporte.
+- **Contenido del Pie de Página**: El pie de página personalizado ahora reemplaza solo el texto de políticas, conservando siempre la paginación.
 
-### Added
+## [16.0.1.1.1] - 2025-09-08
 
--   **Nombre Comercial (`x_biz_name`)**: El reporte ahora muestra el nombre comercial del cliente si está disponible.
--   **Imagen del Cliente**: Se muestra la foto del contacto a la izquierda de sus datos si existe.
--   **Resumen de Estado**: Se reintrodujo el cuadro de "Estado" (Saldo Pendiente, Saldo a Favor, Al día).
--   **Fila de Totales**: Se añadió un resumen con los totales de cargos y abonos del periodo al final del reporte.
--   **Pie de página** con políticas de pago y numeración de página.
+### Changed
+- **Localización para Guatemala**: La descripción de las líneas de factura en el reporte ahora muestra los datos del DTE (Número, Serie, Autorización) para compañías configuradas en Guatemala.
 
-## [1.0.0] - 2025-09-08
-
-### Added
-
--   Creación inicial del módulo `partner_statement_report`.
--   Asistente (wizard) para la generación de reportes con selección de clientes y rangos de fechas.
--   Lógica en Python para calcular saldos e historial de movimientos.
--   Plantilla QWeb para la generación de un reporte PDF funcional.
--   Botón de acceso rápido en la ficha del `res.partner`.
--   Nombre de archivo dinámico para el PDF descargado.
+### Fixed
+- **Borde en Reporte**: Eliminado un borde negro inconsistente que aparecía en la sección de información del cliente en el reporte PDF.

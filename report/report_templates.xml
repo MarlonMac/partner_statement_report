@@ -18,7 +18,7 @@
                     </div>
 
                     <div class="footer">
-                        <div style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10px; border-top: 1px solid #dee2e6; padding-top: 8px; margin: 0 15px;">
+                         <div style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10px; border-top: 1px solid #dee2e6; padding-top: 8px;">
                             <div class="row">
                                 <div class="col-10 text-left">
                                     <t t-if="company.statement_custom_footer and company.statement_footer_text">

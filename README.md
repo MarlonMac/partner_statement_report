@@ -1,56 +1,42 @@
-# Reporte de Estado de Cuenta de Cliente
+# Reporte de Estado de Cuenta de Cliente para Odoo 16
 
-Módulo para Odoo 16 Community Edition que proporciona una herramienta para generar reportes de estado de cuenta detallados para clientes en formato PDF.
+Este módulo para Odoo 16 Community Edition provee una solución completa para generar, configurar y gestionar reportes de estado de cuenta de clientes en formato PDF.
 
-## ✨ Características
+## Características Principales
 
--   **Asistente Intuitivo**: Un wizard fácil de usar para configurar la generación del reporte.
--   **Filtros de Fecha Flexibles**: Permite seleccionar rangos de fechas predefinidos (último mes, últimos 3 meses, etc.) o un rango personalizado.
--   **Selección de Clientes**: Genere reportes para uno o varios clientes a la vez.
--   **Acceso Rápido**: Un botón en la ficha del cliente permite generar su estado de cuenta con un solo clic.
--   **Nombre de Archivo Dinámico**: El PDF descargado se nombra automáticamente con el formato `Estado de Cuenta - {Nombre del Cliente}.pdf`.
--   **Reporte Profesional**: El PDF generado incluye:
-    -   Saldo inicial al comienzo del periodo.
-    -   Listado cronológico de facturas y pagos.
-    -   Cálculo de saldo en tiempo real por cada movimiento.
-    -   Saldo final claro y conciso.
-    -   Refleja correctamente saldos a favor del cliente.
+- **Reporte Detallado**: Genera un PDF con el historial cronológico de transacciones (facturas, notas de crédito, pagos) de un cliente dentro de un rango de fechas específico.
+- **Cálculo de Saldos**: Muestra el saldo inicial, los movimientos del periodo y el saldo final, identificando claramente si el cliente tiene un saldo pendiente o a favor.
+- **Acceso Rápido**: Añade un botón "Estado de Cuenta" directamente en la ficha del cliente para un acceso rápido y contextual.
+- **Diseño Limpio y Profesional**: La plantilla del reporte está diseñada para ser clara, legible y personalizable.
+- **Soporte Multi-Empresa**: La configuración se gestiona por compañía, permitiendo diferentes ajustes en entornos multi-empresa.
+- **Localización para Guatemala**: Para compañías guatemaltecas, la descripción de las facturas muestra automáticamente la información del DTE (Número, Serie y Autorización).
 
-## 🚀 Uso# Reporte de Estado de Cuenta de Cliente
+## Configuración
 
-Módulo para Odoo 16 Community Edition que proporciona una herramienta para generar reportes de estado de cuenta detallados para clientes en formato PDF.
+Para configurar el módulo, navega a **Ajustes > Contabilidad** y encontrarás la sección **"Estado de Cuenta de Cliente"**.
 
-## ✨ Características
+Las opciones disponibles son:
 
--   **Diseño Ejecutivo y Minimalista**: Reporte con un diseño limpio, profesional y fácil de leer.
--   **Asistente Intuitivo**: Un wizard fácil de usar para configurar la generación del reporte.
--   **Filtros de Fecha Flexibles**: Permite seleccionar rangos de fechas predefinidos o un rango personalizado.
--   **Multi-empresa**: El encabezado muestra dinámicamente el logo y datos de la compañía correspondiente.
--   **Personalización por Cliente**:
-    -   Muestra la **imagen del contacto** si está disponible.
-    -   Diferencia entre **Nombre Comercial (`x_biz_name`)** y Razón Social.
-    -   Muestra datos comerciales como **Lista de Precios** y **Plazos de Pago**.
--   **Claridad Visual**:
-    -   Indicadores de color sutiles para cada tipo de transacción (Factura, Pago).
-    -   Resumen de saldos y estado de la cuenta (Pendiente, A favor, Al día).
-    -   Bloque de totales al final del reporte.
--   **Acceso Rápido**: Un botón en la ficha del cliente permite generar su estado de cuenta con un solo clic.
--   **Nombre de Archivo Dinámico**: El PDF descargado se nombra automáticamente.
+- **Activar Estado de Cuenta**: Permite activar o desactivar globalmente la funcionalidad del reporte para la compañía actual.
+- **Usar Pie de Página Personalizado**:
+    - Si está desmarcado, el reporte usará un pie de página con una política de pagos estándar.
+    - Si está marcado, aparecerá un editor de texto que te permitirá diseñar un pie de página personalizado usando formato HTML. El número de página se conservará en ambos casos.
 
-## 🚀 Uso
+## Permisos y Seguridad
 
-1.  **Desde la ficha del cliente**:
-    -   Navegue a la ficha de cualquier cliente en el módulo de `Contactos`.
-    -   Haga clic en el botón inteligente "Estado de Cuenta".
-    -   Se abrirá el asistente con el cliente actual ya seleccionado.
-    -   Elija el rango de fechas y haga clic en "Imprimir PDF".
+El acceso a la funcionalidad de este módulo está controlado por un grupo de seguridad.
 
-## 🛠️ Entorno de Despliegue
+- **Grupo**: `Generar Estados de Cuenta`
+- **Para dar acceso**:
+    1. Ve a **Ajustes > Usuarios y Compañías > Grupos**.
+    2. Busca y abre el grupo "Generar Estados de Cuenta".
+    3. En la pestaña "Usuarios", añade a todos los usuarios que necesiten generar estos reportes.
 
-Este módulo está diseñado y probado para **Odoo 16 Community Edition** en un entorno **Bitnami sobre AWS**.
+Los usuarios que no pertenezcan a este grupo no verán el botón "Estado de Cuenta" ni podrán acceder al asistente.
 
-1.  **Desde la ficha del cliente**:
-    -   Navegue a la ficha de cualquier cliente en el módulo de `Contactos`.
-    -   Haga clic en el botón inteligente "Estado de Cuenta".
-    -   Se abrirá el asistente con el cliente actual ya seleccionado.
-    -   Elija el rango de fechas y haga clic en "Imprimir PDF".
+## Instalación
+
+1.  Copia la carpeta `partner_statement_report` en tu directorio de addons personalizados.
+2.  Reinicia el servicio de Odoo.
+3.  Ve a **Aplicaciones**, haz clic en "Actualizar Lista de Aplicaciones".
+4.  Busca "Reporte de Estado de Cuenta de Cliente" e instálalo.
