@@ -50,10 +50,7 @@ class PartnerStatementWizard(models.TransientModel):
         if not self.partner_ids:
             raise UserError(_('Debe seleccionar al menos un cliente.'))
         
-        # El uso del ORM de Odoo para pasar datos al reporte
-        # asegura que se respeten las reglas de acceso y multi-compañía,
-        # constituyendo una práctica segura.
-        data = {
-            'form': self.read()[0]
-        }
-        return self.env.ref('partner_statement_report.action_report_partner_statement').report_action(self, data=data)
+        # --- LÍNEA MODIFICADA ---
+        # Simplificamos la llamada. El método del reporte ya usa el ID del asistente
+        # para obtener toda la información que necesita.
+        return self.env.ref('partner_statement_report.action_report_partner_statement').report_action(self)
