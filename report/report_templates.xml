@@ -72,7 +72,13 @@
                                             </td>
                                             <td style="vertical-align: top;">
                                                 <strong>Cliente:</strong><br/>
-                                                <strong t-esc="data['partner'].name"/>
+                                                <t t-if="data['partner'].x_biz_name and data['partner'].x_biz_name != data['partner'].name">
+                                                    <strong t-esc="data['partner'].x_biz_name"/>
+                                                    <div style="font-size: 11px;">(Razón Social: <span t-esc="data['partner'].name"/>)</div>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong t-esc="data['partner'].name"/>
+                                                </t>
                                                 <div t-if="data['partner'].vat">NIT: <span t-esc="data['partner'].vat"/></div>
                                                 <div t-if="data['partner'].street">
                                                     <span t-esc="data['partner'].street"/>
@@ -86,17 +92,18 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-4 text-right">
+                                <div class="col-4 text-right" style="padding-top: 21px;">
                                     <t t-if="data['partner'].property_product_pricelist">
                                         <strong>Tipo de cliente:</strong><br/>
                                         <span t-field="data['partner'].property_product_pricelist"/><br/>
                                     </t>
                                     <t t-if="data['partner'].property_payment_term_id">
-                                        <strong>Plazo de Autorizado:</strong><br/>
+                                        <strong>Plazo Autorizado:</strong><br/>
                                         <span t-field="data['partner'].property_payment_term_id"/>
                                     </t>
                                 </div>
                             </div>
+                            
                             <div class="row summary-area" style="display: flex; flex-wrap: wrap;">
                                 <div class="col-4"><div class="summary-box">
                                     <strong>Saldo Inicial</strong><br/>
