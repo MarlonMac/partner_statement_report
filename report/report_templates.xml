@@ -63,19 +63,28 @@
                                 </div>
                             </div>
 
-                             <div class="row customer-area">
+                            <div class="row customer-area">
                                 <div class="col-8">
-                                    <strong>Cliente:</strong><br/>
-                                    <strong t-esc="data['partner'].name"/>
-                                    <div t-if="data['partner'].vat">NIT: <span t-esc="data['partner'].vat"/></div>
-                                    <div t-if="data['partner'].street">
-                                        <span t-esc="data['partner'].street"/>
-                                        <t t-if="data['partner'].street2">, <span t-esc="data['partner'].street2"/></t>
-                                        <br/>
-                                        <t t-if="data['partner'].city"><span t-esc="data['partner'].city"/></t>
-                                        <t t-if="data['partner'].state_id">, <span t-esc="data['partner'].state_id.name"/></t>
-                                        <t t-if="data['partner'].country_id">, <span t-esc="data['partner'].country_id.name"/></t>
-                                    </div>
+                                    <table style="width: 100%;">
+                                        <tr>
+                                            <td t-if="data['partner'].image_128" style="width: 95px; padding-right: 15px; vertical-align: top;">
+                                                <img t-att-src="image_data_uri(data['partner'].image_128)" style="max-height: 80px; max-width: 80px; border-radius: 3px;"/>
+                                            </td>
+                                            <td style="vertical-align: top;">
+                                                <strong>Cliente:</strong><br/>
+                                                <strong t-esc="data['partner'].name"/>
+                                                <div t-if="data['partner'].vat">NIT: <span t-esc="data['partner'].vat"/></div>
+                                                <div t-if="data['partner'].street">
+                                                    <span t-esc="data['partner'].street"/>
+                                                    <t t-if="data['partner'].street2">, <span t-esc="data['partner'].street2"/></t>
+                                                    <br/>
+                                                    <t t-if="data['partner'].city"><span t-esc="data['partner'].city"/></t>
+                                                    <t t-if="data['partner'].state_id">, <span t-esc="data['partner'].state_id.name"/></t>
+                                                    <t t-if="data['partner'].country_id">, <span t-esc="data['partner'].country_id.name"/></t>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                                 <div class="col-4 text-right">
                                     <t t-if="data['partner'].property_product_pricelist">
@@ -88,7 +97,6 @@
                                     </t>
                                 </div>
                             </div>
-
                             <div class="row summary-area" style="display: flex; flex-wrap: wrap;">
                                 <div class="col-4"><div class="summary-box">
                                     <strong>Saldo Inicial</strong><br/>
