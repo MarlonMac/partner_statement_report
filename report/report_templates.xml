@@ -51,11 +51,12 @@
                             .bar-green { background-color: #D5F5E3 !important; }
                             .bar-red { background-color: #FADBD8 !important; }
                             .bar-blue { background-color: #D6EAF8 !important; }
+                            .report-title { color: #b71b1c; }
                         </style>
 
                         <div class="statement-body">
                             <div class="row" style="margin-bottom: 24px;">
-                                <div class="col-7"><h2>Estado de Cuenta</h2></div>
+                                <div class="col-7"><h2 class="report-title">Estado de Cuenta</h2></div>
                                 <div class="col-5 text-right" style="padding-top: 8px;">
                                     <strong>Periodo:</strong>
                                     <span t-esc="docs.date_from.strftime('%d/%m/%Y')"/> a
