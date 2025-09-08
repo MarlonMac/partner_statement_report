@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Reporte de Estado de Cuenta de Cliente',
-    'version': '16.0.1.1.0',
+    'version': '16.0.1.1.1',
     'summary': 'Genera un reporte PDF con el estado de cuenta detallado de clientes.',
     'description': """
         Este módulo añade la funcionalidad para generar estados de cuenta de clientes en PDF.

@@ -50,8 +50,19 @@ class PartnerStatementReport(models.AbstractModel):
                 total_credit += line.credit
                 
                 line_type = 'Asiento Manual'
+                line_description = line.name
+
                 if line.move_id.move_type == 'out_invoice':
                     line_type = 'Factura'
+                    # Lógica específica para Guatemala
+                    if line.move_id.company_id.country_id.code == 'GT':
+                        move = line.move_id
+                        numero_fel = getattr(move, 'numero_fel', '')
+                        serie_fel = getattr(move, 'serie_fel', '')
+                        firma_fel = getattr(move, 'firma_fel', '')
+                        if numero_fel and serie_fel and firma_fel:
+                            line_description = f"DTE Número: {numero_fel}, Serie: {serie_fel} Autorización: {firma_fel}"
+
                 elif line.move_id.move_type == 'out_refund':
                     line_type = 'Nota de Crédito'
                 elif line.payment_id:
@@ -60,7 +71,7 @@ class PartnerStatementReport(models.AbstractModel):
                 lines_data.append({
                     'date': line.date,
                     'document': line.move_id.name,
-                    'description': line.name,
+                    'description': line_description,
                     'debit': line.debit,
                     'credit': line.credit,
                     'balance': balance,

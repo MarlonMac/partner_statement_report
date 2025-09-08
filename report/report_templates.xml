@@ -65,7 +65,7 @@
 
                             <div class="row customer-area">
                                 <div class="col-8">
-                                    <table style="width: 100%;">
+                                    <table style="width: 100%; border: none !important;">
                                         <tr>
                                             <td t-if="data['partner'].image_128" style="width: 95px; padding-right: 15px; vertical-align: top;">
                                                 <img t-att-src="image_data_uri(data['partner'].image_128)" style="max-height: 80px; max-width: 80px; border-radius: 3px;"/>
