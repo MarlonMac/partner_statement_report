@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="module_category_partner_statement" model="ir.module.category">
+            <field name="name">Estado de Cuenta de Cliente</field>
+            <field name="description">Permisos para el módulo de Estado de Cuenta de Cliente.</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="group_partner_statement_user" model="res.groups">
+            <field name="name">Generar Estados de Cuenta</field>
+            <field name="category_id" ref="module_category_partner_statement"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">
+                Este grupo permite a los usuarios generar y visualizar los reportes de estado de cuenta de clientes.
+            </field>
+        </record>
+
+    </data>
+</odoo>

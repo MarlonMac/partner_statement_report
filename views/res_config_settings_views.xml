@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form_inherit_partner_statement" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.partner.statement</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@data-key='account']//div[contains(@class, 'o_settings_container')][1]" position="after">
+                    <h2>Estado de Cuenta de Cliente</h2>
+                    <div class="row mt16 o_settings_container" id="partner_statement_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_settings">
+                            <div class="o_setting_left_pane">
+                                <field name="statement_report_active"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="statement_report_active" string="Activar Estado de Cuenta"/>
+                                <div class="text-muted">
+                                    Activa la funcionalidad del reporte de estado de cuenta de cliente.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_footer_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                                <field name="statement_custom_footer"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="statement_custom_footer"/>
+                                <div class="text-muted">
+                                    Utiliza un pie de página personalizado en el reporte.
+                                </div>
+                                <div class="mt8" attrs="{'invisible': [('statement_custom_footer', '=', False)]}">
+                                    <field name="statement_footer_text" class="oe-bordered-editor"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

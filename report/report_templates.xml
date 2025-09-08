@@ -18,11 +18,18 @@
                     </div>
 
                     <div class="footer">
-                         <div style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10px; border-top: 1px solid #dee2e6; padding-top: 8px; margin: 0 15px;">
+                        <div style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10px; border-top: 1px solid #dee2e6; padding-top: 8px; margin: 0 15px;">
                             <div class="row">
                                 <div class="col-10 text-left">
-                                    <strong>Políticas de Pago:</strong> Agradecemos realizar sus pagos antes de la fecha de vencimiento. Cualquier pago realizado después de la fecha límite puede estar sujeto a cargos por mora.
-                                    Para consultas sobre su estado de cuenta, por favor contacte a nuestro departamento de contabilidad.
+                                    <t t-if="company.statement_custom_footer and company.statement_footer_text">
+                                        <div style="text-align: justify;">
+                                            <span t-raw="company.statement_footer_text"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="not company.statement_custom_footer">
+                                        <strong>Políticas de Pago:</strong> Agradecemos realizar sus pagos antes de la fecha de vencimiento. Cualquier pago realizado después de la fecha límite puede estar sujeto a cargos por mora.
+                                        Para consultas sobre su estado de cuenta, por favor contacte a nuestro departamento de contabilidad.
+                                    </t>
                                 </div>
                                 <div class="col-2 text-right">
                                     Página <span class="page"/> / <span class="topage"/>
@@ -41,6 +48,7 @@
                                 background-color: #f8f9fa; height: 100%;
                             }
                             h2 { font-size: 24px; font-weight: lighter; margin: 0; padding: 0;}
+                            .report-title { color: #b71b1c; }
                             th {
                                 font-weight: bold; border: none;
                                 border-bottom: 2px solid #adb5bd; padding: 8px 4px;
@@ -51,7 +59,6 @@
                             .bar-green { background-color: #D5F5E3 !important; }
                             .bar-red { background-color: #FADBD8 !important; }
                             .bar-blue { background-color: #D6EAF8 !important; }
-                            .report-title { color: #b71b1c; }
                         </style>
 
                         <div class="statement-body">

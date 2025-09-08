@@ -19,7 +19,7 @@
                         <button name="print_report" string="Imprimir PDF" type="object" class="btn-primary"/>
                         <button string="Cancelar" class="btn-secondary" special="cancel"/>
                     </footer>
-                </form>
+                </form> 
             </field>
         </record>
 
@@ -28,6 +28,7 @@
             <field name="res_model">partner.statement.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="groups_id" eval="[(4, ref('partner_statement_report.group_partner_statement_user'))]"/>
         </record>
 
     </data>
