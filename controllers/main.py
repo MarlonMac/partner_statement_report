@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from odoo import http
+from odoo import http, fields 
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -15,18 +15,18 @@ class StatementDownloadController(http.Controller):
         Link = request.env['statement.download.link'].sudo()
         link = Link.search([('access_token', '=', access_token)], limit=1)
 
-        if not link or http.fields.Datetime.now() > link.expiration_date:
+        # CORRECCIÓN: Usar fields.Datetime.now() en lugar de http.fields.Datetime.now()
+        if not link or fields.Datetime.now() > link.expiration_date:
             # Podríamos renderizar una página de error más amigable en el futuro.
             return request.not_found("El enlace de descarga es inválido o ha expirado.")
 
         try:
-            # CORRECCIÓN: Usar la API de modelo correcta para renderizar el reporte.
             report_action_id = 'partner_statement_report.action_report_partner_statement'
             wizard_id = link.attachment_id.res_id
             
+            # La llamada al reporte ya es correcta
             pdf_content, _ = request.env['ir.actions.report']._render_qweb_pdf(report_action_id, [wizard_id])
 
-                # Preparar la respuesta HTTP para la descarga del PDF            
             pdf_http_headers = [
                 ('Content-Type', 'application/pdf'),
                 ('Content-Length', len(pdf_content)),
