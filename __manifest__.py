@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Reporte de Estado de Cuenta de Cliente',
-    'version': '16.0.1.5.0',
+    'version': '16.0.1.5.2',
     'summary': 'Genera un reporte PDF con el estado de cuenta detallado de clientes y permite enviarlo por email o WhatsApp.',
     'description': """
         Este módulo añade la funcionalidad para generar estados de cuenta de clientes en PDF.
         
-        Versión 1.5.0:
+        Versión 1.5.2:
         - Envío por WhatsApp con enlace de descarga temporal y seguro para el PDF.
         - Nuevo controlador para gestionar las descargas públicas.
         - Tarea programada (cron) para limpiar enlaces y adjuntos expirados.

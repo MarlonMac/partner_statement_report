@@ -1,8 +1,21 @@
 # Changelog
-All notable changes to this project will be documented in this file.
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-# Changelog
+## [16.0.1.5.2] - 2025-09-09
+
+### Fixed
+-   **Maquetación del Reporte**: Se realizaron múltiples ajustes de estilo en la plantilla QWeb para mejorar la consistencia y profesionalismo del PDF.
+-   Se eliminaron bordes inconsistentes en el bloque de información del cliente.
+-   Se corrigió la superposición de la imagen y el texto del cliente usando una maquetación basada en `float`.
+-   Se reestructuró el pie de página para alinear correctamente el texto y centrar la paginación.
+-   Se añadió una línea separadora horizontal debajo del título del reporte.
+-   Se resaltó la fila del saldo final con los colores corporativos para mayor impacto visual.
+
+## [16.0.1.5.1] - 2025-09-09
+
+### Fixed
+-   **Mejora de Usabilidad**: Se optimizaron los textos de ayuda para la configuración de la plantilla de WhatsApp, detallando cada placeholder.
+-   **Nuevo Placeholder**: Se añadió `{expiration_days}` a la plantilla de WhatsApp para informar al cliente sobre la validez del enlace.
+
 
 ## [16.0.1.5.0] - 2025-09-09
 
