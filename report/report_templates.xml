@@ -73,12 +73,12 @@
                             
                             <div class="row customer-area">
                                 <div class="col-8">
-                                    <div class="row g-0">
-                                        <div t-if="data['partner'].image_128" class="col-auto" style="padding-right: 15px;">
+                                    <div style="overflow: hidden;">
+                                        <div t-if="data['partner'].image_128" style="float: left; margin-right: 15px; width: 90px;">
                                             <img t-att-src="image_data_uri(data['partner'].image_128)" 
-                                                 style="max-height: 80px; max-width: 80px; border-radius: 3px; vertical-align: top;"/>
+                                                style="max-height: 80px; max-width: 80px; border-radius: 3px; display: block;"/>
                                         </div>
-                                        <div class="col">
+                                        <div style="overflow: hidden;">
                                             <strong>Cliente:</strong><br/>
                                             <t t-if="data['partner'].x_biz_name and data['partner'].x_biz_name != data['partner'].name">
                                                 <strong t-esc="data['partner'].x_biz_name"/>
