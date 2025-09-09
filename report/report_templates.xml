@@ -71,7 +71,7 @@
                                 </div>
                             </div>
 
-                            <div class="row customer-area">
+                            <div class="row customer-area" style="border: none !important;">
                                 <div class="col-8">
                                     <table style="width: 100%; border: none !important;">
                                         <tr>

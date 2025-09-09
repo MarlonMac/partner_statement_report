@@ -50,43 +50,29 @@ class PartnerStatementWizard(models.TransientModel):
             raise UserError(_('Debe seleccionar al menos un cliente.'))
         return self.env.ref('partner_statement_report.action_report_partner_statement').report_action(self)
 
-    def send_email_report(self):
+    def action_review_and_send(self):
         self.ensure_one()
+        
+        if len(self.partner_ids) > 1:
+            raise UserError(_('Para revisar y enviar, por favor seleccione solo un cliente a la vez.'))
         if not self.partner_ids:
             raise UserError(_('Debe seleccionar al menos un cliente.'))
 
-        template = self.env.ref('partner_statement_report.partner_statement_mail_template')
-        sent_partners = []
+        template = self.env.ref('partner_statement_report.partner_statement_mail_template', raise_if_not_found=False)
 
-        for partner in self.partner_ids:
-            if not partner.email:
-                _logger.warning("Cliente '%s' (ID: %s) no tiene un email configurado. Omitiendo envío.", partner.name, partner.id)
-                continue
-
-            wizard_values = {
-                'partner_ids': [(6, 0, [partner.id])],
-                'date_from': self.date_from,
-                'date_to': self.date_to,
-                'company_id': self.company_id.id,
-            }
-            wizard_for_partner = self.env['partner.statement.wizard'].create(wizard_values)
-            
-            template.send_mail(wizard_for_partner.id, force_send=False)
-            sent_partners.append(partner.name)
-            _logger.info("Estado de cuenta para '%s' añadido a la cola de envío.", partner.name)
-        
-        # Devolvemos una notificación al usuario para una mejor UX.
-        if sent_partners:
-            message = _("Se han añadido a la cola de envío los estados de cuenta para: %s") % (", ".join(sent_partners))
-        else:
-            message = _("No se pudo enviar ningún correo. Verifique que los clientes seleccionados tengan una dirección de correo electrónico.")
+        ctx = {
+            'default_model': 'partner.statement.wizard',
+            'default_res_id': self.id,
+            'default_use_template': bool(template),
+            'default_template_id': template.id if template else False,
+            'default_composition_mode': 'comment',
+            'force_email': True,
+        }
 
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Envío en Proceso'),
-                'message': message,
-                'sticky': False,
-            }
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'target': 'new',
+            'context': ctx,
         }

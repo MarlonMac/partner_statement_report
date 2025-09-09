@@ -5,30 +5,27 @@
             <field name="name">Estado de Cuenta - Enviar por Correo</field>
             <field name="model_id" ref="partner_statement_report.model_partner_statement_wizard"/>
             
-            <field name="subject">Estado de Cuenta - ${object.company_id.name}</field>
-            <field name="email_from">${user.email_formatted | safe}</field>
-            <field name="email_to">${object.partner_ids[0].email}</field>
+            <field name="subject">Estado de Cuenta - {{ object.company_id.name }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="partner_to">{{ object.partner_ids[0].id if object.partner_ids else '' }}</field>
             
             <field name="body_html" type="html">
-<div style="margin: 0px; padding: 0px;">
-    <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        Estimado cliente: <t t-out="object.partner_ids[0].name or ''"></t>,
-        <br/><br/>
-        Adjunto encontrará su estado de cuenta para el periodo del
+<div style="margin: 0px; padding: 0px; font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px;">
+    <p>Estimado cliente: <t t-out="object.partner_ids[0].name or ''"></t>,</p>
+    <p>Adjunto encontrará su estado de cuenta para el periodo del
         <strong><span t-field="object.date_from" t-options='{"widget": "date"}'/></strong> al
         <strong><span t-field="object.date_to" t-options='{"widget": "date"}'/></strong>.
-        <br/><br/>
-        Si tiene alguna pregunta, no dude en contactarnos.
-        <br/><br/>
-        Saludos cordiales,
-        <br/>
-        <strong><t t-out="object.company_id.name or ''"></t></strong>
+    </p>
+    <p>Si tiene alguna pregunta, no dude en contactarnos.</p>
+    <p>Saludos cordiales,<br/>
+    <strong><t t-out="object.company_id.name or ''"></t></strong>
     </p>
 </div>
             </field>
+            
             <field name="report_template" ref="action_report_partner_statement"/>
-            <field name="report_name">Estado de Cuenta - ${object.partner_ids[0].name}</field>
-            <field name="lang">${object.partner_ids[0].lang}</field>
+            <field name="report_name">Estado de Cuenta - {{ object.partner_ids[0].name if object.partner_ids else 'Estado de Cuenta' }}</field>
+            <field name="lang">{{ object.partner_ids[0].lang if object.partner_ids else user.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
     </data>
