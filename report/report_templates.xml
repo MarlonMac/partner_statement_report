@@ -39,7 +39,7 @@
                     <div class="page">
                         <style>
                             .statement-body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; color: #4J4J4J; }
-                            .customer-area, .summary-area { margin-bottom: 32px; }
+                            .customer-area, .summary-area { margin-bottom: 32px; margin-top: 24px;}
                             .text-right { text-align: right; }
                             .summary-box {
                                 border: 1px solid #E6E2DD; padding: 12px; border-radius: 4px;
@@ -60,7 +60,7 @@
                         </style>
 
                         <div class="statement-body">
-                            <div class="row" style="margin-bottom: 24px;">
+                            <div class="row">
                                 <div class="col-7"><h2 class="report-title">Estado de Cuenta</h2></div>
                                 <div class="col-5 text-right" style="padding-top: 8px;">
                                     <strong>Periodo:</strong>
