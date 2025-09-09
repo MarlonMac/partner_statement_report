@@ -11,8 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class PartnerStatementWizard(models.TransientModel):
     _name = 'partner.statement.wizard'
-    _description = 'Asistente para Reporte de Estado de Cuenta'
-
+    # ... (el resto de la clase sin cambios) ...
     company_id = fields.Many2one('res.company', string='Compañía', required=True, default=lambda self: self.env.company)
     date_range_option = fields.Selection([
         ('custom', 'Rango Personalizado'),
@@ -89,7 +88,7 @@ class PartnerStatementWizard(models.TransientModel):
         filename = f"Estado de Cuenta - {partner_name}.pdf"
         
         return pdf_content, filename
-
+    
     def action_send_whatsapp(self):
         self.ensure_one()
         if len(self.partner_ids) != 1:
@@ -116,6 +115,11 @@ class PartnerStatementWizard(models.TransientModel):
         download_link = Link.create_statement_link(attachment, partner)
         
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+        # Forzamos el uso de HTTPS para evitar errores de contenido mixto.
+        if base_url and base_url.startswith('http://'):
+            base_url = base_url.replace('http://', 'https://')
+
         full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
 
         # 3. Formatear número de teléfono
@@ -133,7 +137,7 @@ class PartnerStatementWizard(models.TransientModel):
             date_from=self.date_from.strftime('%d/%m/%Y'),
             date_to=self.date_to.strftime('%d/%m/%Y'),
             download_link=full_download_url,
-            expiration_days=self.company_id.statement_link_expiration_days # <-- Nuevo placeholder
+            expiration_days=self.company_id.statement_link_expiration_days
         )
         
         encoded_message = quote(message)
