@@ -82,7 +82,6 @@ class PartnerStatementWizard(models.TransientModel):
 
     def _generate_statement_pdf(self):
         """Genera el contenido del PDF y su nombre."""
-
         report_xml_id = 'partner_statement_report.action_report_partner_statement'
         pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(report_xml_id, self.ids)
         
@@ -133,7 +132,8 @@ class PartnerStatementWizard(models.TransientModel):
             company_name=self.company_id.name,
             date_from=self.date_from.strftime('%d/%m/%Y'),
             date_to=self.date_to.strftime('%d/%m/%Y'),
-            download_link=full_download_url
+            download_link=full_download_url,
+            expiration_days=self.company_id.statement_link_expiration_days # <-- Nuevo placeholder
         )
         
         encoded_message = quote(message)

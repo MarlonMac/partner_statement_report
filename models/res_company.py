@@ -21,9 +21,12 @@ class ResCompany(models.Model):
     statement_whatsapp_template = fields.Text(
         string="Plantilla de Mensaje de WhatsApp",
         translate=True,
-        default="""Estimado {partner_name},
+        default="""Estimado cliente: {partner_name},
 Adjunto encontrará su estado de cuenta para el periodo del {date_from} al {date_to}.
 Puede descargarlo aquí: {download_link}
+_Por políticas de WhatsApp debe agregar este número a sus contactos para que el enlace se active_
+_Este enlace estará activo durante {expiration_days} días._
+_Si necesita un nuevo enlace, por favor contáctenos._
 
 Saludos cordiales,
 {company_name}""",
@@ -33,7 +36,8 @@ Puedes usar los siguientes placeholders:
 - {company_name}: Nombre de tu compañía
 - {date_from}: Fecha de inicio del reporte
 - {date_to}: Fecha de fin del reporte
-- {download_link}: Enlace de descarga del PDF"""
+- {download_link}: Enlace de descarga del PDF
+- {expiration_days}: Días de validez del enlace"""
     )
     statement_link_expiration_days = fields.Integer(
         string="Duración del Enlace de Descarga (días)",

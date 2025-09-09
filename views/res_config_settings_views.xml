@@ -39,7 +39,13 @@
                             <div class="o_setting_right_pane">
                                 <label for="statement_whatsapp_template"/>
                                 <div class="text-muted">
-                                    Edita el mensaje predeterminado para WhatsApp. Puedes usar placeholders como {partner_name}, {company_name}, etc.
+                                    Define el mensaje predeterminado. Placeholders disponibles:<br/>
+                                    <b>{partner_name}</b>: Nombre del cliente<br/>
+                                    <b>{company_name}</b>: Nombre de tu compañía<br/>
+                                    <b>{date_from}</b>: Fecha de inicio<br/>
+                                    <b>{date_to}</b>: Fecha de fin<br/>
+                                    <b>{download_link}</b>: Enlace de descarga<br/>
+                                    <b>{expiration_days}</b>: Días de validez del enlace
                                 </div>
                                 <div class="mt8">
                                     <field name="statement_whatsapp_template" class="oe_textarea"/>
