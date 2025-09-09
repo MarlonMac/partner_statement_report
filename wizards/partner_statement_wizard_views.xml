@@ -14,9 +14,10 @@
                             <field name="date_to" attrs="{'invisible': [('date_range_option', '!=', 'custom')]}"/>
                         </group>
                     </group>
-                    <field name="partner_ids" domain="[('customer_rank', '>', 0)]"/>
+                    <field name="partner_ids" domain="[('customer_rank', '>', 0)]" widget="many2many_tags"/>
                     <footer>
-                        <button name="print_report" string="Imprimir PDF" type="object" class="btn-primary"/>
+                        <button name="print_report" string="Descargar PDF" type="object" class="btn-primary"/>
+                        <button name="send_email_report" string="Enviar por Email" type="object" class="btn-secondary"/>
                         <button string="Cancelar" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form> 
