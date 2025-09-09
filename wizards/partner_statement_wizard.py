@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
+import base64
+from urllib.parse import quote
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from datetime import date, timedelta
@@ -75,4 +78,71 @@ class PartnerStatementWizard(models.TransientModel):
             'res_model': 'mail.compose.message',
             'target': 'new',
             'context': ctx,
+        }
+
+    def _generate_statement_pdf(self):
+        """Genera el contenido del PDF y su nombre."""
+
+        report_xml_id = 'partner_statement_report.action_report_partner_statement'
+        pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(report_xml_id, self.ids)
+        
+        partner_name = self.partner_ids[0].name.replace('/', '_')
+        filename = f"Estado de Cuenta - {partner_name}.pdf"
+        
+        return pdf_content, filename
+
+    def action_send_whatsapp(self):
+        self.ensure_one()
+        if len(self.partner_ids) != 1:
+            raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
+        
+        partner = self.partner_ids[0]
+        mobile = partner.mobile
+        if not mobile:
+            raise UserError(_('El cliente "%s" no tiene un número de móvil configurado.', partner.name))
+
+        # 1. Generar y guardar el PDF como adjunto
+        pdf_content, filename = self._generate_statement_pdf()
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'type': 'binary',
+            'datas': base64.b64encode(pdf_content),
+            'res_model': self._name,
+            'res_id': self.id,
+            'mimetype': 'application/pdf',
+        })
+
+        # 2. Crear el enlace de descarga seguro
+        Link = self.env['statement.download.link']
+        download_link = Link.create_statement_link(attachment, partner)
+        
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
+
+        # 3. Formatear número de teléfono
+        phone_number = re.sub(r'\D', '', mobile)
+        if partner.country_id and partner.country_id.phone_code:
+            country_code = partner.country_id.phone_code
+            if not phone_number.startswith(str(country_code)):
+                phone_number = str(country_code) + phone_number
+        
+        # 4. Formatear mensaje
+        template = self.company_id.statement_whatsapp_template or ''
+        message = template.format(
+            partner_name=partner.name,
+            company_name=self.company_id.name,
+            date_from=self.date_from.strftime('%d/%m/%Y'),
+            date_to=self.date_to.strftime('%d/%m/%Y'),
+            download_link=full_download_url
+        )
+        
+        encoded_message = quote(message)
+        
+        # 5. Construir URL de WhatsApp y devolver acción
+        whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}&text={encoded_message}"
+        
+        return {
+            'type': 'ir.actions.act_url',
+            'url': whatsapp_url,
+            'target': 'new',
         }

@@ -18,3 +18,25 @@ class ResCompany(models.Model):
         translate=True,
         help="Introduce el contenido personalizado para el pie de página del reporte."
     )
+    statement_whatsapp_template = fields.Text(
+        string="Plantilla de Mensaje de WhatsApp",
+        translate=True,
+        default="""Estimado {partner_name},
+Adjunto encontrará su estado de cuenta para el periodo del {date_from} al {date_to}.
+Puede descargarlo aquí: {download_link}
+
+Saludos cordiales,
+{company_name}""",
+        help="""Define la plantilla para el envío por WhatsApp. 
+Puedes usar los siguientes placeholders:
+- {partner_name}: Nombre del cliente
+- {company_name}: Nombre de tu compañía
+- {date_from}: Fecha de inicio del reporte
+- {date_to}: Fecha de fin del reporte
+- {download_link}: Enlace de descarga del PDF"""
+    )
+    statement_link_expiration_days = fields.Integer(
+        string="Duración del Enlace de Descarga (días)",
+        default=2,
+        help="Número de días que el enlace de descarga del estado de cuenta permanecerá activo."
+    )

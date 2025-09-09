@@ -6,17 +6,17 @@
             <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="account.res_config_settings_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@data-key='account']//div[contains(@class, 'o_settings_container')][1]" position="after">
+                <xpath expr="//div[@data-key='account']" position="inside">
                     <h2>Estado de Cuenta de Cliente</h2>
-                    <div class="row mt16 o_settings_container" id="partner_statement_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_settings">
+                    <div class="row mt16 o_settings_container" id="partner_statement_settings">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
                                 <field name="statement_report_active"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="statement_report_active" string="Activar Estado de Cuenta"/>
+                                <label for="statement_report_active"/>
                                 <div class="text-muted">
-                                    Activa la funcionalidad del reporte de estado de cuenta de cliente.
+                                    Activa la funcionalidad del estado de cuenta de cliente en todo el sistema.
                                 </div>
                             </div>
                         </div>
@@ -27,10 +27,34 @@
                             <div class="o_setting_right_pane">
                                 <label for="statement_custom_footer"/>
                                 <div class="text-muted">
-                                    Utiliza un pie de página personalizado en el reporte.
+                                    Define un pie de página personalizado para el reporte.
                                 </div>
                                 <div class="mt8" attrs="{'invisible': [('statement_custom_footer', '=', False)]}">
-                                    <field name="statement_footer_text" class="oe-bordered-editor"/>
+                                    <field name="statement_footer_text" placeholder="Ej: Información de contacto, datos bancarios, etc."/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_whatsapp_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="statement_whatsapp_template"/>
+                                <div class="text-muted">
+                                    Edita el mensaje predeterminado para WhatsApp. Puedes usar placeholders como {partner_name}, {company_name}, etc.
+                                </div>
+                                <div class="mt8">
+                                    <field name="statement_whatsapp_template" class="oe_textarea"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_link_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Duración del Enlace de Descarga</span>
+                                <div class="text-muted">
+                                    Define cuántos días el enlace de descarga del PDF será válido.
+                                </div>
+                                <div class="content-group mt16">
+                                   <field name="statement_link_expiration_days" class="oe_inline"/> días
                                 </div>
                             </div>
                         </div>

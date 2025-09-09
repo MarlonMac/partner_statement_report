@@ -22,3 +22,15 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         help="Diseña el contenido que aparecerá en el pie de página."
     )
+    statement_whatsapp_template = fields.Text(
+        string="Plantilla de Mensaje de WhatsApp",
+        related='company_id.statement_whatsapp_template',
+        readonly=False,
+        help="Define la plantilla para el envío por WhatsApp."
+    )
+    statement_link_expiration_days = fields.Integer(
+        string="Duración del Enlace (días)",
+        related='company_id.statement_link_expiration_days',
+        readonly=False,
+        help="Días que el enlace de descarga del PDF permanecerá activo."
+    )

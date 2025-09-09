@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_partner_statement_wizard,partner.statement.wizard.access,model_partner_statement_wizard,account.group_account_user,1,1,1,1
+access_statement_download_link_user,statement.download.link user,model_statement_download_link,base.group_user,1,1,1,1
