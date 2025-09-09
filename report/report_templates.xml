@@ -41,10 +41,9 @@
                             .statement-body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; color: #4J4J4J; }
                             .customer-area, .summary-area { margin-bottom: 32px; }
                             .text-right { text-align: right; }
-                            .text-justify { text-align: justify; }
                             .summary-box {
-                                border: 1px solid #e9ecef; padding: 12px; border-radius: 4px;
-                                background-color: #f8f9fa; height: 100%;
+                                border: 1px solid #E6E2DD; padding: 12px; border-radius: 4px;
+                                background-color: #edeff2; height: 100%;
                             }
                             h2 { font-size: 24px; font-weight: lighter; margin: 0; padding: 0;}
                             .report-title { color: #b71b1c; }
@@ -70,6 +69,12 @@
                                 </div>
                             </div>
                             
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr style="border-top: 1px solid #dee2e6; margin-top: 4px; margin-bottom: 24px;"/>
+                                </div>
+                            </div>
+
                             <div class="row customer-area">
                                 <div class="col-8">
                                     <div style="overflow: hidden;">
@@ -177,7 +182,7 @@
                                                     <span t-esc="data['total_credit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
                                                 </td>
                                             </tr>
-                                            <tr style="font-weight: bold;">
+                                            <tr style="font-weight: bold; background-color: #b71b1c; color: #FFFFFF;">
                                                 <td class="text-start">
                                                     <t t-if="data['final_balance'] > 0.01">Saldo Pendiente</t>
                                                     <t t-if="data['final_balance'] &lt; -0.01">Saldo a Favor</t>
