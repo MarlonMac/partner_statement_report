@@ -2,7 +2,17 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [16.0.1.3.0] - 2025-09-09
+
+### Added
+-   **Envío de Email**: Se añadió un botón "Revisar y Enviar Email" en el asistente.
+-   **Plantilla de Correo**: Se creó una plantilla de correo para el estado de cuenta.
+
+### Changed
+-   **Funcionalidad de Email**: El envío de correo se implementó usando el asistente interactivo (`mail.compose.message`) para gestionar un solo cliente a la vez, en lugar de un envío masivo en segundo plano.
+
+### Fixed
+-   **Errores de Renderizado de Plantillas**: Se solucionaron múltiples `ValueError` y fallos silenciosos relacionados con el renderizado de plantillas de correo y la creación de registros `mail.mail`, adoptando el patrón de `mail.compose.message` para mayor estabilidad.
 
 ## [16.0.1.2.0] - 2025-09-08
 
