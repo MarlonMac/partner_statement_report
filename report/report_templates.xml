@@ -20,29 +20,28 @@
                     <div class="footer">
                          <div style="font-family: 'Helvetica', 'Arial', sans-serif; font-size: 10px; border-top: 1px solid #dee2e6; padding-top: 8px;">
                             <div class="row">
-                                <div class="col-10 text-left">
+                                <div class="col-12" style="text-align: justify;">
                                     <t t-if="company.statement_custom_footer and company.statement_footer_text">
-                                        <div style="text-align: justify;">
-                                            <span t-raw="company.statement_footer_text"/>
-                                        </div>
+                                        <span t-raw="company.statement_footer_text"/>
                                     </t>
                                     <t t-if="not company.statement_custom_footer">
-                                        <strong>Políticas de Pago:</strong> Agradecemos realizar sus pagos antes de la fecha de vencimiento. Cualquier pago realizado después de la fecha límite puede estar sujeto a cargos por mora.
-                                        Para consultas sobre su estado de cuenta, por favor contacte a nuestro departamento de contabilidad.
+                                        <strong>Políticas de Pago:</strong> Agradecemos realizar sus pagos antes de la fecha de vencimiento. Cualquier pago realizado después de la fecha límite puede estar sujeto a cargos por mora. Para consultas sobre su estado de cuenta, por favor contacte a nuestro departamento de contabilidad.
                                     </t>
                                 </div>
-                                <div class="col-2 text-right">
+                            </div>
+                            <div class="row text-center mt-2">
+                                <div class="col-12">
                                     Página <span class="page"/> / <span class="topage"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="page">
                         <style>
                             .statement-body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; color: #4J4J4J; }
                             .customer-area, .summary-area { margin-bottom: 32px; }
                             .text-right { text-align: right; }
+                            .text-justify { text-align: justify; }
                             .summary-box {
                                 border: 1px solid #e9ecef; padding: 12px; border-radius: 4px;
                                 background-color: #f8f9fa; height: 100%;
