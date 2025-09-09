@@ -70,35 +70,34 @@
                                     <span t-esc="docs.date_to.strftime('%d/%m/%Y')"/>
                                 </div>
                             </div>
-
-                            <div class="row customer-area" style="border: none !important;">
+                            
+                            <div class="row customer-area">
                                 <div class="col-8">
-                                    <table style="width: 100%; border: none !important;">
-                                        <tr>
-                                            <td t-if="data['partner'].image_128" style="width: 95px; padding-right: 15px; vertical-align: top;">
-                                                <img t-att-src="image_data_uri(data['partner'].image_128)" style="max-height: 80px; max-width: 80px; border-radius: 3px;"/>
-                                            </td>
-                                            <td style="vertical-align: top;">
-                                                <strong>Cliente:</strong><br/>
-                                                <t t-if="data['partner'].x_biz_name and data['partner'].x_biz_name != data['partner'].name">
-                                                    <strong t-esc="data['partner'].x_biz_name"/>
-                                                    <div style="font-size: 11px;">(Razón Social: <span t-esc="data['partner'].name"/>)</div>
-                                                </t>
-                                                <t t-else="">
-                                                    <strong t-esc="data['partner'].name"/>
-                                                </t>
-                                                <div t-if="data['partner'].vat">NIT: <span t-esc="data['partner'].vat"/></div>
-                                                <div t-if="data['partner'].street">
-                                                    <span t-esc="data['partner'].street"/>
-                                                    <t t-if="data['partner'].street2">, <span t-esc="data['partner'].street2"/></t>
-                                                    <br/>
-                                                    <t t-if="data['partner'].city"><span t-esc="data['partner'].city"/></t>
-                                                    <t t-if="data['partner'].state_id">, <span t-esc="data['partner'].state_id.name"/></t>
-                                                    <t t-if="data['partner'].country_id">, <span t-esc="data['partner'].country_id.name"/></t>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="row g-0">
+                                        <div t-if="data['partner'].image_128" class="col-auto" style="padding-right: 15px;">
+                                            <img t-att-src="image_data_uri(data['partner'].image_128)" 
+                                                 style="max-height: 80px; max-width: 80px; border-radius: 3px; vertical-align: top;"/>
+                                        </div>
+                                        <div class="col">
+                                            <strong>Cliente:</strong><br/>
+                                            <t t-if="data['partner'].x_biz_name and data['partner'].x_biz_name != data['partner'].name">
+                                                <strong t-esc="data['partner'].x_biz_name"/>
+                                                <div style="font-size: 11px;">(Razón Social: <span t-esc="data['partner'].name"/>)</div>
+                                            </t>
+                                            <t t-else="">
+                                                <strong t-esc="data['partner'].name"/>
+                                            </t>
+                                            <div t-if="data['partner'].vat">NIT: <span t-esc="data['partner'].vat"/></div>
+                                            <div t-if="data['partner'].street">
+                                                <span t-esc="data['partner'].street"/>
+                                                <t t-if="data['partner'].street2">, <span t-esc="data['partner'].street2"/></t>
+                                                <br/>
+                                                <t t-if="data['partner'].city"><span t-esc="data['partner'].city"/></t>
+                                                <t t-if="data['partner'].state_id">, <span t-esc="data['partner'].state_id.name"/></t>
+                                                <t t-if="data['partner'].country_id">, <span t-esc="data['partner'].country_id.name"/></t>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-4 text-right" style="padding-top: 21px;">
                                     <t t-if="data['partner'].property_product_pricelist">
