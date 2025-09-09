@@ -1,33 +1,18 @@
-# Roadmap del Proyecto
+# Roadmap del Módulo: Estado de Cuenta de Cliente
 
-Este documento describe los planes futuros y las posibles mejoras para el módulo de Estado de Cuenta.
+Este documento traza el plan de desarrollo y las futuras mejoras para el módulo `partner_statement_report`.
 
----
+## Próximas Características (Pendientes)
 
-### ✅ Versión 1.3 - Comunicación (Completado)
+### Versión 1.6.0
+-   [ ] **Filtrado por Saldo**: Añadir una opción en el wizard para generar el reporte solo para clientes con saldo pendiente (`total_due > 0`).
+-   [ ] **Soporte Multi-Moneda**: Mejorar el reporte para mostrar claramente los saldos en la moneda del cliente y en la moneda de la compañía, si son diferentes.
+-   [ ] **Envío Masivo por Email**: Implementar una acción para enviar los estados de cuenta por email a todos los clientes seleccionados de una vez, utilizando una acción de servidor o una cola de trabajos.
 
--   **Envío por Email Individual**: Se implementó un botón "Revisar y Enviar Email" que abre el asistente de correo de Odoo para enviar un estado de cuenta a un solo cliente, permitiendo la revisión y edición manual antes de enviar.
+## Características Completadas
 
----
-
-### ✅ Versión 1.2 - Configuración y Seguridad (Completado)
-
--   **Panel de Configuración Centralizado**: Se creó una nueva sección en **Ajustes > Contabilidad**.
--   **Activación por Compañía**: Implementada la opción para activar/desactivar la funcionalidad.
--   **Gestión de Permisos**: Creado el grupo de seguridad "Generar Estados de Cuenta".
-
----
-
-### 🚀 Próxima Versión: Funcionalidades Avanzadas
-
-
--   **Integración con WhatsApp**: Añadir un botón "Enviar por WhatsApp" que abrirá WhatsApp Web en una nueva pestaña con un mensaje de plantilla predefinido.
-
----
-
-### 📆 Versiones Futuras
-
--   **Filtro por Saldos**: Añadir una opción en el asistente para generar el reporte únicamente para clientes con saldo pendiente.
-
--   **Envío Masivo por Email**: Implementar un segundo botón (ej: "Enviar a Todos por Email") que utilice la cola de correos para enviar los estados de cuenta a todos los clientes seleccionados en segundo plano.
--   **Generación Masiva Programada**: Crear una acción programada (cron job) para enviar automáticamente los estados de cuenta a fin de mes.
+-   [x] **(v1.5.0) Integración con WhatsApp**: Permitir el envío de un mensaje de WhatsApp con un enlace de descarga seguro y temporal para el estado de cuenta.
+-   [x] **(v1.3.0) Envío por Email**: Integración para enviar el estado de cuenta por correo electrónico directamente desde el asistente.
+-   [x] **(v1.2.0) Pie de Página Configurable**: Permitir al usuario definir un pie de página personalizado para el reporte desde los ajustes de contabilidad.
+-   [x] **(v1.1.0) Mejoras de Usabilidad**: Añadir botón inteligente en la ficha del cliente y opciones de rango de fechas predefinidas.
+-   [x] **(v1.0.0) Funcionalidad Base**: Creación del reporte en PDF, wizard de generación y modelo de datos inicial.

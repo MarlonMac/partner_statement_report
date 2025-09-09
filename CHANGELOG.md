@@ -2,6 +2,23 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+# Changelog
+
+## [16.0.1.5.0] - 2025-09-09
+
+### Added
+-   **Integración Avanzada con WhatsApp**: Se implementó la funcionalidad "Enviar por WhatsApp" que genera un enlace de descarga temporal, público y seguro para el estado de cuenta en PDF.
+-   **Controlador Público Seguro**: Se añadió un controlador HTTP para gestionar las descargas de reportes desde enlaces públicos, validando tokens y fechas de expiración.
+-   **Configuración de Expiración**: Nueva opción en `Ajustes > Contabilidad` para definir por cuántos días serán válidos los enlaces de descarga.
+-   **Limpieza Automática**: Se configuró un trabajo programado (cron) que se ejecuta diariamente para eliminar los enlaces y archivos adjuntos expirados, manteniendo la base de datos limpia.
+
+### Fixed
+-   **Permisos de Acceso para Reportes Públicos**: Se solucionó un error crítico de `AccessError` al generar el reporte desde el controlador público. La solución fue ejecutar el proceso de renderizado con el entorno del superusuario para sobrepasar las ACL y Reglas de Registro.
+-   **Widget de Vista del Wizard**: Se corrigió un error de `OwlError` en el frontend reemplazando el widget incompatible `many2one_avatar_user` por `many2many_tags_avatar`.
+-   **API de Renderizado de Reportes**: Se corrigió la llamada a la función `_render_qweb_pdf` para usar la API de modelo correcta, solucionando un `AttributeError` en el backend.
+-   **Carga de Controlador**: Se aseguró la correcta importación del directorio de controladores en el `__init__.py` principal del módulo para resolver un error 404.
+
+
 ## [16.0.1.3.0] - 2025-09-09
 
 ### Added

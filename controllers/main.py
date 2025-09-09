@@ -13,21 +13,16 @@ class StatementDownloadController(http.Controller):
         Permite la descarga pública de un estado de cuenta a través de un token de acceso.
         """
         try:
-            # Usamos sudo() aquí para poder encontrar el enlace sin problemas de permisos iniciales
             link = request.env['statement.download.link'].sudo().search([('access_token', '=', access_token)], limit=1)
 
             if not link or fields.Datetime.now() > link.expiration_date:
                 return request.not_found("El enlace de descarga es inválido o ha expirado.")
 
-            # --- SOLUCIÓN PRINCIPAL ---
-            # Creamos un nuevo entorno con el usuario administrador (SUPERUSER_ID)
-            # para que todo el proceso de renderizado del reporte tenga los permisos necesarios.
             report_env = request.env(user=SUPERUSER_ID)
             
             report_action_id = 'partner_statement_report.action_report_partner_statement'
             wizard_id = link.attachment_id.res_id
             
-            # Llamamos a la función de renderizado usando el nuevo entorno con superpoderes
             pdf_content, _ = report_env['ir.actions.report']._render_qweb_pdf(report_action_id, [wizard_id])
 
             # Preparamos la respuesta para descargar el archivo
