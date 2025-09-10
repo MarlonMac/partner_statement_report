@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Reporte de Estado de Cuenta de Cliente',
-    'version': '16.0.1.5.2',
-    'summary': 'Genera un reporte PDF con el estado de cuenta detallado de clientes y permite enviarlo por email o WhatsApp.',
+    'name': 'Gestor de Estado de Cuenta de Cliente',
+    'version': '16.0.1.7.0',
+    'summary': 'Genera, envía por email/WhatsApp y gestiona estados de cuenta de clientes.',
     'description': """
-        Este módulo añade la funcionalidad para generar estados de cuenta de clientes en PDF.
+        Módulo avanzado para la gestión de estados de cuenta de clientes.
         
-        Versión 1.5.2:
-        - Envío por WhatsApp con enlace de descarga temporal y seguro para el PDF.
-        - Nuevo controlador para gestionar las descargas públicas.
-        - Tarea programada (cron) para limpiar enlaces y adjuntos expirados.
-        - Configuración de la duración de validez de los enlaces.
+        Versión 1.7.0:
+        - Implementación de plantillas de mensajes para WhatsApp.
+        - Se puede seleccionar entre plantillas (estándar, cobro, saldo a favor).
+        - Configuración para plantilla de WhatsApp por defecto en Ajustes de Contabilidad.
+        - Atajo para gestionar las plantillas desde la configuración.
     """,
     'author': 'Marlon Macario',
     'category': 'Accounting/Reporting',
@@ -19,8 +19,10 @@
         'security/partner_statement_security.xml',
         'security/ir.model.access.csv',
         'data/statement_mail_template.xml',
+        'data/statement_whatsapp_templates.xml', 
         'data/ir_cron_data.xml',
         'wizards/partner_statement_wizard_views.xml',
+        'wizards/whatsapp_statement_wizard_views.xml',
         'report/report_actions.xml',
         'report/report_templates.xml',
         'views/partner_views.xml',

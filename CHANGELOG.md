@@ -1,5 +1,24 @@
 # Changelog
 
+Todas las versiones y cambios notables de este módulo serán documentados en este archivo.
+
+## [16.0.1.7.0] - 2025-09-10
+
+### Added
+-   **Gestión de Plantillas para WhatsApp**: Se reemplazó el mensaje de texto fijo por un sistema de plantillas (`mail.template`).
+-   **Nuevas Plantillas por Defecto**: Se incluyen 3 plantillas iniciales: Mensaje Estándar, Mensaje de Cobro y Notificación de Saldo a Favor.
+-   **Configuración Avanzada**: Se añadió una opción en `Ajustes > Contabilidad` para seleccionar la plantilla de WhatsApp por defecto.
+-   **Atajo de Gestión**: Se incluyó un botón en los ajustes para acceder directamente a la gestión de plantillas de correo.
+-   **Mejora del Wizard de WhatsApp**: El asistente ahora permite seleccionar la plantilla a utilizar antes de enviar el mensaje.
+
+## [16.0.1.6.0]
+
+### Added
+-   **Asistente de Envío para WhatsApp**: Al hacer clic en "Enviar por WhatsApp", ahora se abre un asistente intermedio.
+-   **Previsualización de Mensaje**: El nuevo asistente muestra el mensaje completo con los placeholders reemplazados antes de enviarlo.
+-   **Selección de Contacto**: Se puede seleccionar a qué contacto del cliente (incluyendo los contactos hijos) se enviará el estado de cuenta. El sistema sugiere automáticamente el contacto de tipo "Facturación" si existe.
+
+
 ## [16.0.1.5.2] - 2025-09-09
 
 ### Fixed

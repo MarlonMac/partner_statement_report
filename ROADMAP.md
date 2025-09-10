@@ -1,24 +1,34 @@
-# Roadmap del Módulo: Estado de Cuenta de Cliente
+# Roadmap del Módulo: Gestor Financiero de Clientes
 
-Este documento traza el plan de desarrollo y las futuras mejoras para el módulo `partner_statement_report`.
+Este documento describe el plan de desarrollo y las futuras características para el módulo.
 
-## Próximas Características (Pendientes)
+## Fase 1: Reporte y Envío de Estado de Cuenta (Completada)
 
-### Versión 1.6.0
--   [ ] **Wizard de Envío para WhatsApp**: Crear un asistente intermedio (similar al de "Enviar Email") que se active al presionar "Enviar por WhatsApp". Este asistente debería:
-    -   Mostrar una previsualización del mensaje final, con todos los placeholders ya reemplazados.
-    -   Permitir al usuario seleccionar a qué contacto (hijo) del cliente se enviará el mensaje, buscando por defecto el contacto de tipo "Facturación".
+-   [x] **Versión 1.0.0 - 1.4.0**: Funcionalidad base de generación de reportes PDF.
+-   [x] **Versión 1.5.0**: Envío de estado de cuenta por WhatsApp con enlace de descarga seguro.
+-   [x] **Versión 1.6.0**: Asistente intermedio para envío por WhatsApp, con previsualización y selección de contacto.
+-   [x] **Versión 1.7.0**: Implementación de plantillas de mensajes para WhatsApp y configuración centralizada.
 
-### Versión 1.7.0
--   [ ] **Filtrado por Saldo**: Añadir una opción en el wizard para generar el reporte solo para clientes con saldo pendiente (`total_due > 0`).
--   [ ] **Soporte Multi-Moneda**: Mejorar el reporte para mostrar claramente los saldos en la moneda del cliente y en la moneda de la compañía, si son diferentes.
--   [ ] **Envío Masivo por Email**: Implementar una acción para enviar los estados de cuenta por email a todos los clientes seleccionados de una vez, utilizando una acción de servidor o una cola de trabajos.
+---
 
-## Características Completadas
+## Fase 2: Evolución a Gestor Financiero de Clientes
 
--   [x] **(v1.5.2) Refinamiento Visual del Reporte**: Múltiples mejoras de CSS y maquetación en la plantilla QWeb.
--   [x] **(v1.5.0) Integración con WhatsApp**: Permitir el envío de un mensaje de WhatsApp con un enlace de descarga seguro y temporal para el estado de cuenta.
--   [x] **(v1.3.0) Envío por Email**: Integración para enviar el estado de cuenta por correo electrónico directamente desde el asistente.
--   [x] **(v1.2.0) Pie de Página Configurable**: Permitir al usuario definir un pie de página personalizado para el reporte desde los ajustes de contabilidad.
--   [x] **(v1.1.0) Mejoras de Usabilidad**: Añadir botón inteligente en la ficha del cliente y opciones de rango de fechas predefinidas.
--   [x] **(v1.0.0) Funcionalidad Base**: Creación del reporte en PDF, wizard de generación y modelo de datos inicial.
+El enfoque del módulo se expande para convertirse en una herramienta proactiva para la administración de todos los aspectos financieros de la cuenta del cliente.
+
+### Versión 1.8.0 (Planificada): Recordatorios de Pago Automáticos
+-   [ ] **Motor de Reglas para Recordatorios**: Crear un sistema que permita configurar cuándo enviar recordatorios (ej. X días antes del vencimiento, el día del vencimiento, X días después).
+-   [ ] **Cron Job Automatizado**: Un proceso automático que evalúe las facturas pendientes y envíe los recordatorios según las reglas.
+-   [ ] **Configuración por Cliente**: Permitir activar o desactivar los recordatorios automáticos para clientes específicos.
+-   [ ] **Plantillas de Mensajes para Recordatorios**: Usar el sistema de plantillas `mail.template` para definir los mensajes de los recordatorios.
+
+### Versión 1.9.0 (Planificada): Notificaciones y Log de Cuenta
+-   [ ] **Motor de Notificaciones**: Crear un sistema para notificar al cliente sobre eventos importantes en su cuenta:
+    -   Aplicación de una nota de crédito.
+    -   Registro de un pago.
+    -   Cambio en sus términos de pago o categoría de cliente.
+-   [ ] **Log de Comunicaciones**: Añadir una pestaña o widget en la ficha del cliente que registre todos los estados de cuenta y notificaciones enviadas, mostrando la fecha, el canal (Email/WhatsApp) y el usuario que lo envió.
+
+### Versión 2.0.0 (Hito Estratégico): Consolidación y Dashboard
+-   [ ] **Dashboard de Cuentas por Cobrar**: Una nueva vista o dashboard que resuma la salud de las cuentas por cobrar, mostrando saldos vencidos, promesas de pago, y clientes con mayor riesgo.
+-   [ ] **Consolidación de Funcionalidades**: Refinar la interfaz de usuario para presentar todas las herramientas (enviar estado de cuenta, registrar comunicación, enviar notificación) en un único lugar cohesivo.
+-   [ ] **Lanzamiento Mayor**: El lanzamiento de la versión 2.0.0 marcará la transición completa del módulo de una herramienta de reporte a una suite de gestión financiera de clientes.

@@ -22,11 +22,11 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         help="Diseña el contenido que aparecerá en el pie de página."
     )
-    statement_whatsapp_template = fields.Text(
-        string="Plantilla de Mensaje de WhatsApp",
-        related='company_id.statement_whatsapp_template',
+    statement_whatsapp_template_id = fields.Many2one(
+        related='company_id.statement_whatsapp_template_id',
         readonly=False,
-        help="Define la plantilla para el envío por WhatsApp."
+        string="Plantilla WhatsApp por Defecto",
+        help="Define la plantilla que se usará por defecto para enviar mensajes por WhatsApp."
     )
     statement_link_expiration_days = fields.Integer(
         string="Duración del Enlace (días)",

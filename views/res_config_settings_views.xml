@@ -34,24 +34,24 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_whatsapp_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
-                            <div class="o_setting_left_pane"/>
-                            <div class="o_setting_right_pane">
-                                <label for="statement_whatsapp_template"/>
-                                <div class="text-muted">
-                                    Define el mensaje predeterminado. Placeholders disponibles:<br/>
-                                    <b>{partner_name}</b>: Nombre del cliente<br/>
-                                    <b>{company_name}</b>: Nombre de tu compañía<br/>
-                                    <b>{date_from}</b>: Fecha de inicio<br/>
-                                    <b>{date_to}</b>: Fecha de fin<br/>
-                                    <b>{download_link}</b>: Enlace de descarga<br/>
-                                    <b>{expiration_days}</b>: Días de validez del enlace
-                                </div>
-                                <div class="mt8">
-                                    <field name="statement_whatsapp_template" class="oe_textarea"/>
-                                </div>
+                             <div class="o_setting_left_pane">
+                                 <field name="statement_whatsapp_template_id"/>
+                            </div>
+                             <div class="o_setting_right_pane">
+                                 <label for="statement_whatsapp_template_id"/>
+                                 <div class="text-muted">
+                                     Plantilla por defecto para envíos por WhatsApp.
+                                 </div>
+                                 <button name="%(mail.action_mail_template_form)d"
+                                         icon="fa-arrow-right"
+                                         type="action"
+                                         string="Gestionar Plantillas"
+                                         class="btn-link"/>
                             </div>
                         </div>
+
                         <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_link_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
@@ -60,7 +60,7 @@
                                     Define cuántos días el enlace de descarga del PDF será válido.
                                 </div>
                                 <div class="content-group mt16">
-                                   <field name="statement_link_expiration_days" class="oe_inline"/> días
+                                    <field name="statement_link_expiration_days" class="oe_inline"/> días
                                 </div>
                             </div>
                         </div>

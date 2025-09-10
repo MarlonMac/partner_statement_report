@@ -11,7 +11,8 @@ _logger = logging.getLogger(__name__)
 
 class PartnerStatementWizard(models.TransientModel):
     _name = 'partner.statement.wizard'
-    # ... (el resto de la clase sin cambios) ...
+    _description = 'Asistente para Generar Estado de Cuenta'
+    
     company_id = fields.Many2one('res.company', string='Compañía', required=True, default=lambda self: self.env.company)
     date_range_option = fields.Selection([
         ('custom', 'Rango Personalizado'),
@@ -95,11 +96,8 @@ class PartnerStatementWizard(models.TransientModel):
             raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
         
         partner = self.partner_ids[0]
-        mobile = partner.mobile
-        if not mobile:
-            raise UserError(_('El cliente "%s" no tiene un número de móvil configurado.', partner.name))
 
-        # 1. Generar y guardar el PDF como adjunto
+        # 1. Generar y guardar el PDF
         pdf_content, filename = self._generate_statement_pdf()
         attachment = self.env['ir.attachment'].create({
             'name': filename,
@@ -110,43 +108,36 @@ class PartnerStatementWizard(models.TransientModel):
             'mimetype': 'application/pdf',
         })
 
-        # 2. Crear el enlace de descarga seguro
+        # 2. Crear el enlace de descarga
         Link = self.env['statement.download.link']
         download_link = Link.create_statement_link(attachment, partner)
         
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-
-        # Forzamos el uso de HTTPS para evitar errores de contenido mixto.
         if base_url and base_url.startswith('http://'):
             base_url = base_url.replace('http://', 'https://')
-
         full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
 
-        # 3. Formatear número de teléfono
-        phone_number = re.sub(r'\D', '', mobile)
-        if partner.country_id and partner.country_id.phone_code:
-            country_code = partner.country_id.phone_code
-            if not phone_number.startswith(str(country_code)):
-                phone_number = str(country_code) + phone_number
+        # 3. Preparar placeholders para la plantilla
+        template_placeholders = {
+            'partner_name': partner.name,
+            'company_name': self.company_id.name,
+            'date_from': self.date_from.strftime('%d/%m/%Y'),
+            'date_to': self.date_to.strftime('%d/%m/%Y'),
+            'download_link': full_download_url,
+            'expiration_days': self.company_id.statement_link_expiration_days
+        }
         
-        # 4. Formatear mensaje
-        template = self.company_id.statement_whatsapp_template or ''
-        message = template.format(
-            partner_name=partner.name,
-            company_name=self.company_id.name,
-            date_from=self.date_from.strftime('%d/%m/%Y'),
-            date_to=self.date_to.strftime('%d/%m/%Y'),
-            download_link=full_download_url,
-            expiration_days=self.company_id.statement_link_expiration_days
-        )
-        
-        encoded_message = quote(message)
-        
-        # 5. Construir URL de WhatsApp y devolver acción
-        whatsapp_url = f"https://web.whatsapp.com/send?phone={phone_number}&text={encoded_message}"
+        # 4. Abrir el wizard intermedio, pasando los placeholders
+        ctx = {
+            'default_partner_id': partner.id,
+            'template_placeholders': template_placeholders, # Nuevo
+        }
         
         return {
-            'type': 'ir.actions.act_url',
-            'url': whatsapp_url,
+            'type': 'ir.actions.act_window',
+            'name': 'Enviar Estado de Cuenta por WhatsApp',
+            'res_model': 'whatsapp.statement.wizard',
+            'view_mode': 'form',
             'target': 'new',
+            'context': ctx,
         }

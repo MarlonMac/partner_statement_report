@@ -3,3 +3,4 @@
 from . import res_company
 from . import res_config_settings
 from . import statement_download_link
+from . import mail_template
