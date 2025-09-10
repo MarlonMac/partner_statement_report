@@ -25,6 +25,9 @@ class PartnerStatementWizard(models.TransientModel):
     date_to = fields.Date('Hasta', required=True, default=fields.Date.today)
     partner_ids = fields.Many2many('res.partner', string='Clientes', required=True, default=lambda self: self.env.context.get('active_ids', []) if self.env.context.get('active_model') == 'res.partner' else [])
 
+    computed_download_link = fields.Char('Enlace de Descarga', store=False)
+    computed_expiration_days = fields.Integer('Días de Expiración', store=False)
+
     @api.onchange('date_range_option')
     def _onchange_date_range_option(self):
         today = date.today()
@@ -55,14 +58,12 @@ class PartnerStatementWizard(models.TransientModel):
 
     def action_review_and_send(self):
         self.ensure_one()
-        
         if len(self.partner_ids) > 1:
             raise UserError(_('Para revisar y enviar, por favor seleccione solo un cliente a la vez.'))
         if not self.partner_ids:
             raise UserError(_('Debe seleccionar al menos un cliente.'))
 
         template = self.env.ref('partner_statement_report.partner_statement_mail_template', raise_if_not_found=False)
-
         ctx = {
             'default_model': 'partner.statement.wizard',
             'default_res_id': self.id,
@@ -71,7 +72,6 @@ class PartnerStatementWizard(models.TransientModel):
             'default_composition_mode': 'comment',
             'force_email': True,
         }
-
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -81,13 +81,10 @@ class PartnerStatementWizard(models.TransientModel):
         }
 
     def _generate_statement_pdf(self):
-        """Genera el contenido del PDF y su nombre."""
         report_xml_id = 'partner_statement_report.action_report_partner_statement'
         pdf_content, _ = self.env['ir.actions.report']._render_qweb_pdf(report_xml_id, self.ids)
-        
         partner_name = self.partner_ids[0].name.replace('/', '_')
         filename = f"Estado de Cuenta - {partner_name}.pdf"
-        
         return pdf_content, filename
     
     def action_send_whatsapp(self):
@@ -96,19 +93,12 @@ class PartnerStatementWizard(models.TransientModel):
             raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
         
         partner = self.partner_ids[0]
-
-        # 1. Generar y guardar el PDF
         pdf_content, filename = self._generate_statement_pdf()
         attachment = self.env['ir.attachment'].create({
-            'name': filename,
-            'type': 'binary',
-            'datas': base64.b64encode(pdf_content),
-            'res_model': self._name,
-            'res_id': self.id,
-            'mimetype': 'application/pdf',
+            'name': filename, 'type': 'binary', 'datas': base64.b64encode(pdf_content),
+            'res_model': self._name, 'res_id': self.id, 'mimetype': 'application/pdf',
         })
 
-        # 2. Crear el enlace de descarga
         Link = self.env['statement.download.link']
         download_link = Link.create_statement_link(attachment, partner)
         
@@ -117,20 +107,15 @@ class PartnerStatementWizard(models.TransientModel):
             base_url = base_url.replace('http://', 'https://')
         full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
 
-        # 3. Preparar placeholders para la plantilla
-        template_placeholders = {
-            'partner_name': partner.name,
-            'company_name': self.company_id.name,
-            'date_from': self.date_from.strftime('%d/%m/%Y'),
-            'date_to': self.date_to.strftime('%d/%m/%Y'),
-            'download_link': full_download_url,
-            'expiration_days': self.company_id.statement_link_expiration_days
-        }
+        # Escribimos los valores en el asistente. Al ser un TransientModel, Odoo crea el registro.
+        self.write({
+            'computed_download_link': full_download_url,
+            'computed_expiration_days': self.company_id.statement_link_expiration_days
+        })
         
-        # 4. Abrir el wizard intermedio, pasando los placeholders
         ctx = {
             'default_partner_id': partner.id,
-            'template_placeholders': template_placeholders, # Nuevo
+            'active_wizard_id': self.id,  # --- CAMBIO CLAVE: Pasamos el ID, no el objeto self ---
         }
         
         return {

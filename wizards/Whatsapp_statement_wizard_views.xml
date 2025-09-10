@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <record id="view_whatsapp_statement_wizard_form" model="ir.ui.view">
             <field name="name">whatsapp.statement.wizard.form</field>
             <field name="model">whatsapp.statement.wizard</field>
@@ -15,7 +14,15 @@
                     </group>
                     <group>
                         <field name="partner_id" options="{'no_open': True}"/>
-                        <field name="contact_id"/>
+                        <label for="contact_id" string="Contacto de Envío"/>
+                        <div class="o_row">
+                            <field name="contact_id" options="{'no_open': True}"/>
+                            <span class="ms-2 badge text-bg-secondary"
+                                  attrs="{'invisible': [('contact_type', '=', False)]}">
+                                <i class="fa fa-tag me-1"/>
+                                <field name="contact_type"/>
+                            </span>
+                        </div>
                         <field name="mobile"/>
                     </group>
                     <group>
@@ -28,6 +35,5 @@
                 </form>
             </field>
         </record>
-
     </data>
 </odoo>

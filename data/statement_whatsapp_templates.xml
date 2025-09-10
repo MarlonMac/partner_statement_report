@@ -6,21 +6,22 @@
             <field name="name">Estado de Cuenta: Mensaje Estándar (WhatsApp)</field>
             <field name="model_id" ref="partner_statement_report.model_partner_statement_wizard"/>
             <field name="subject">Estado de Cuenta</field>
-            <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-*Estimado Cliente {partner_name},*
+            <field name="body_html" type="html">
+<div>
+*Estimado cliente: {{ object.partner_ids[0].name if object.partner_ids else 'Cliente' }},*
 
-Adjunto encontrará su estado de cuenta desde el {date_from} hasta el {date_to}.
+Adjunto encontrará su estado de cuenta desde el {{ format_date(object.date_from) }} hasta el {{ format_date(object.date_to) }}.
 
 Puede descargarlo usando el siguiente enlace seguro:
-{download_link}
+{{ object.computed_download_link }}
+_Por políticas de WhatsApp, debe agregar este número a sus contactos para activar el enlace._
 
-El enlace es válido por {expiration_days} días.
+El enlace es válido por {{ object.computed_expiration_days }} días.
 
 Saludos cordiales,
-*{company_name}*
+*{{ object.company_id.name }}*
 </div>
-            ]]></field>
+            </field>
             <field name="is_statement_whatsapp_template" eval="True"/>
         </record>
 
@@ -28,21 +29,24 @@ Saludos cordiales,
             <field name="name">Estado de Cuenta: Mensaje de Cobro (WhatsApp)</field>
             <field name="model_id" ref="partner_statement_report.model_partner_statement_wizard"/>
             <field name="subject">Recordatorio de Pago</field>
-            <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-*Estimado/a {partner_name},*
+            <field name="body_html" type="html">
+<div>
+*Estimado cliente: {{ object.partner_ids[0].name if object.partner_ids else 'Cliente' }},*
 
 Le contactamos para recordarle sobre su saldo pendiente con nosotros.
 
-Adjunto encontrará su estado de cuenta detallado desde el {date_from} hasta el {date_to}.
-Puede descargarlo aquí: {download_link}
+Adjunto encontrará su estado de cuenta detallado desde el {{ format_date(object.date_from) }} hasta el {{ format_date(object.date_to) }}.
+Puede descargarlo aquí: {{ object.computed_download_link }}
+_Por políticas de WhatsApp, debe agregar este número a sus contactos para activar el enlace._
+
+El enlace es válido por {{ object.computed_expiration_days }} días.
 
 Agradeceríamos que pudiera procesar su pago a la brevedad posible.
 
 Saludos cordiales,
-*{company_name}*
+*{{ object.company_id.name }}*
 </div>
-            ]]></field>
+            </field>
             <field name="is_statement_whatsapp_template" eval="True"/>
         </record>
 
@@ -50,22 +54,24 @@ Saludos cordiales,
             <field name="name">Estado de Cuenta: Saldo a Favor (WhatsApp)</field>
             <field name="model_id" ref="partner_statement_report.model_partner_statement_wizard"/>
             <field name="subject">Notificación de Saldo a Favor</field>
-            <field name="body_html"><![CDATA[
-<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
-*Estimado/a {partner_name},*
+            <field name="body_html" type="html">
+<div>
+*Estimado cliente: {{ object.partner_ids[0].name if object.partner_ids else 'Cliente' }},*
 
 ¡Buenas noticias!
 
-Le informamos que actualmente tiene un saldo a favor con nosotros. Puede ver el detalle en su estado de cuenta desde el {date_from} hasta el {date_to}.
+Le informamos que actualmente tiene un saldo a favor con nosotros. Puede ver el detalle en su estado de cuenta desde el {{ format_date(object.date_from) }} hasta el {{ format_date(object.date_to) }}.
 
-Descárguelo aquí: {download_link}
+Descárguelo aquí: {{ object.computed_download_link }}
+_Por políticas de WhatsApp, debe agregar este número a sus contactos para activar el enlace._
+El enlace es válido por {{ object.computed_expiration_days }} días.
 
 Este saldo se aplicará a sus próximas facturas.
 
 Saludos cordiales,
-*{company_name}*
+*{{ object.company_id.name }}*
 </div>
-            ]]></field>
+            </field>
             <field name="is_statement_whatsapp_template" eval="True"/>
         </record>
 
