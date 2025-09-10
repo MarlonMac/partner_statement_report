@@ -34,3 +34,12 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         help="Días que el enlace de descarga del PDF permanecerá activo."
     )
+
+    def action_manage_whatsapp_templates(self):
+        """
+        Este método es llamado por el botón en la vista de ajustes.
+        Busca la acción de las plantillas de correo y la devuelve.
+        """
+        self.ensure_one()
+        action_data = self.env.ref('mail.action_mail_template_form').read()[0]
+        return action_data
