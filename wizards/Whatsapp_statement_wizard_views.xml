@@ -7,13 +7,22 @@
             <field name="arch" type="xml">
                 <form>
                     <div class="alert alert-info" role="alert">
-                        <i class="fa fa-info-circle"/> Seleccione una plantilla y verifique el destinatario.
+                        <i class="fa fa-whatsapp"/> <strong>Envío por WhatsApp</strong><br/>
+                        Seleccione una plantilla de mensaje y verifique el destinatario antes de enviar.
                     </div>
+                    
                     <group>
-                        <field name="template_id" options="{'no_create': True, 'no_open': True}"/>
+                        <group>
+                            <field name="template_id" 
+                                   options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Seleccione una plantilla..."/>
+                        </group>
+                        <group>
+                            <field name="partner_id" options="{'no_open': True}" readonly="1"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="partner_id" options="{'no_open': True}"/>
+                    
+                    <group string="Destinatario">
                         <label for="contact_id" string="Contacto de Envío"/>
                         <div class="o_row">
                             <field name="contact_id" options="{'no_open': True}"/>
@@ -23,14 +32,33 @@
                                 <field name="contact_type"/>
                             </span>
                         </div>
-                        <field name="mobile"/>
+                        <field name="mobile" 
+                               placeholder="Ej: +502 1234-5678"
+                               attrs="{'required': [('mobile', '!=', False)]}"/>
                     </group>
-                    <group>
-                        <field name="message" nolabel="1" placeholder="Mensaje de vista previa..."/>
-                    </group>
+                    
+                    <separator string="Vista Previa del Mensaje"/>
+                    <field name="message" 
+                           nolabel="1" 
+                           placeholder="El mensaje aparecerá aquí cuando seleccione una plantilla..."
+                           attrs="{'readonly': [('template_id', '=', False)]}"
+                           widget="text"/>
+                           
+                    <div class="alert alert-warning mt-3" role="alert" attrs="{'invisible': [('message', '!=', False)]}">
+                        <i class="fa fa-exclamation-triangle"/> 
+                        Seleccione una plantilla para ver la vista previa del mensaje.
+                    </div>
+                    
                     <footer>
-                        <button name="action_send_whatsapp_direct" string="Enviar Ahora" type="object" class="btn-primary" icon="fa-whatsapp"/>
-                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                        <button name="action_send_whatsapp_direct" 
+                                string="Abrir WhatsApp" 
+                                type="object" 
+                                class="btn-primary" 
+                                icon="fa-whatsapp"
+                                attrs="{'invisible': ['|', ('mobile', '=', False), ('message', '=', False)]}"/>
+                        <button string="Cancelar" 
+                                class="btn-secondary" 
+                                special="cancel"/>
                     </footer>
                 </form>
             </field>

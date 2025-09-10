@@ -88,41 +88,71 @@ class PartnerStatementWizard(models.TransientModel):
         return pdf_content, filename
     
     def action_send_whatsapp(self):
-        self.ensure_one()
-        if len(self.partner_ids) != 1:
-            raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
-        
-        partner = self.partner_ids[0]
-        pdf_content, filename = self._generate_statement_pdf()
-        attachment = self.env['ir.attachment'].create({
-            'name': filename, 'type': 'binary', 'datas': base64.b64encode(pdf_content),
-            'res_model': self._name, 'res_id': self.id, 'mimetype': 'application/pdf',
-        })
+            """Abrir wizard de WhatsApp con plantilla renderizada."""
+            self.ensure_one()
+            if len(self.partner_ids) != 1:
+                raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
+            
+            partner = self.partner_ids[0]
+            
+            # Generar PDF y crear attachment
+            pdf_content, filename = self._generate_statement_pdf()
+            attachment = self.env['ir.attachment'].create({
+                'name': filename, 
+                'type': 'binary', 
+                'datas': base64.b64encode(pdf_content),
+                'res_model': self._name, 
+                'res_id': self.id, 
+                'mimetype': 'application/pdf',
+            })
 
-        Link = self.env['statement.download.link']
-        download_link = Link.create_statement_link(attachment, partner)
-        
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        if base_url and base_url.startswith('http://'):
-            base_url = base_url.replace('http://', 'https://')
-        full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
+            # Crear enlace de descarga
+            Link = self.env['statement.download.link']
+            download_link = Link.create_statement_link(attachment, partner)
+            
+            # Generar URL completa
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            if base_url and base_url.startswith('http://'):
+                base_url = base_url.replace('http://', 'https://')
+            full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
 
-        # Escribimos los valores en el asistente. Al ser un TransientModel, Odoo crea el registro.
-        self.write({
-            'computed_download_link': full_download_url,
-            'computed_expiration_days': self.company_id.statement_link_expiration_days
-        })
-        
-        ctx = {
-            'default_partner_id': partner.id,
-            'active_wizard_id': self.id,  # --- CAMBIO CLAVE: Pasamos el ID, no el objeto self ---
-        }
-        
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Enviar Estado de Cuenta por WhatsApp',
-            'res_model': 'whatsapp.statement.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': ctx,
-        }
+            # IMPORTANTE: Actualizar campos computados en el wizard actual
+            self.write({
+                'computed_download_link': full_download_url,
+                'computed_expiration_days': self.company_id.statement_link_expiration_days or 7
+            })
+            
+            # Hacer commit para asegurar que los cambios estén guardados antes del renderizado
+            self.env.cr.commit()
+            
+            ctx = {
+                'default_partner_id': partner.id,
+                'active_wizard_id': self.id,  # Pasar el ID del wizard actual
+            }
+            
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Enviar Estado de Cuenta por WhatsApp',
+                'res_model': 'whatsapp.statement.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': ctx,
+            }
+# Agregar estos campos al final de la clase PartnerStatementWizard
+    
+    computed_download_link = fields.Char(
+        'Enlace de Descarga', 
+        store=True,  # Cambiar a True para persistir
+        help="URL de descarga temporal para el estado de cuenta"
+    )
+    computed_expiration_days = fields.Integer(
+        'Días de Expiración', 
+        store=True,  # Cambiar a True para persistir
+        help="Número de días que el enlace permanecerá activo"
+    )
+    
+    @api.depends('company_id')
+    def _compute_expiration_days(self):
+        """Computar días de expiración basado en configuración de la compañía."""
+        for wizard in self:
+            wizard.computed_expiration_days = wizard.company_id.statement_link_expiration_days or 7
