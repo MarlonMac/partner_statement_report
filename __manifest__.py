@@ -18,12 +18,15 @@
     'data': [
         'security/partner_statement_security.xml',
         'security/ir.model.access.csv',
+        # 1. Cargar las acciones de reporte primero.
+        'report/report_actions.xml',     
+        # 2. Ahora sí, cargar los datos que dependen de las acciones.
         'data/statement_mail_template.xml',
-        'data/statement_whatsapp_templates.xml', 
-        'data/ir_cron_data.xml',
+        'data/statement_whatsapp_templates.xml',
+        'data/ir_cron_data.xml',        
+        # 3. Cargar el resto de las vistas y asistentes.
         'wizards/partner_statement_wizard_views.xml',
         'wizards/whatsapp_statement_wizard_views.xml',
-        'report/report_actions.xml',
         'report/report_templates.xml',
         'views/partner_views.xml',
         'views/res_config_settings_views.xml',
