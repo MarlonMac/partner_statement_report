@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_partner_statement_wizard,partner.statement.wizard,model_partner_statement_wizard,partner_statement_report.group_generate_statement,1,1,1,1
-access_statement_download_link,statement.download.link,model_statement_download_link,base.group_public,1,0,0,0
-access_whatsapp_statement_wizard,whatsapp.statement.wizard,model_whatsapp_statement_wizard,partner_statement_report.group_generate_statement,1,1,1,1
+access_partner_statement_wizard,partner.statement.wizard,model_partner_statement_wizard,base.group_user,1,1,1,1
+access_whatsapp_statement_wizard,whatsapp.statement.wizard,model_whatsapp_statement_wizard,base.group_user,1,1,1,1
+access_statement_download_link_user,statement.download.link.user,model_statement_download_link,base.group_user,1,1,1,1
+access_statement_download_link_public,statement.download.link.public,model_statement_download_link,base.group_public,1,0,0,0
