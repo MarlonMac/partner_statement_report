@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_whatsapp_mail_template" model="ir.actions.act_window">
+            <field name="name">Plantillas de WhatsApp para Estado de Cuenta</field>
+            <field name="res_model">mail.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_statement_whatsapp_template', '=', True)]</field>
+            <field name="context">{'default_is_statement_whatsapp_template': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crea tu primera plantilla para WhatsApp
+                </p><p>
+                    Aquí puedes crear y gestionar las plantillas que se usarán para enviar los estados de cuenta por WhatsApp.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

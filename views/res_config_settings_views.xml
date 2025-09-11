@@ -36,22 +36,22 @@
                         </div>
                         
                         <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_whatsapp_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
+                            <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">
                                 <label for="statement_whatsapp_template_id"/>
                                 <div class="text-muted">
                                     Plantilla por defecto para envíos por WhatsApp.
                                 </div>
-                                <div class="o_setting_left_pane">
+                                <div class="content-group mt16">
                                     <field name="statement_whatsapp_template_id"/>
                                 </div><br/>
-                                <button name="action_manage_whatsapp_templates"
+                                <button name="%(partner_statement_report.action_whatsapp_mail_template)d"
                                         icon="fa-arrow-right"
-                                        type="object"
+                                        type="action"
                                         string="Gestionar Plantillas"
                                         class="btn-link"/>
                             </div>
                         </div>
-
                         <div class="col-12 col-lg-6 o_setting_box" id="partner_statement_link_settings" attrs="{'invisible': [('statement_report_active', '=', False)]}">
                             <div class="o_setting_left_pane"/>
                             <div class="o_setting_right_pane">

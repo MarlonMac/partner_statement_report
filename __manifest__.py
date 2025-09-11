@@ -19,6 +19,7 @@
         'security/partner_statement_security.xml',
         'security/ir.model.access.csv',
         # 1. Cargar las acciones de reporte primero.
+        'views/mail_template_actions.xml',
         'report/report_actions.xml',     
         # 2. Ahora sí, cargar los datos que dependen de las acciones.
         'data/statement_mail_template.xml',
@@ -32,7 +33,7 @@
         'views/res_config_settings_views.xml',
     ],
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'license': 'OPL-1',
 }
