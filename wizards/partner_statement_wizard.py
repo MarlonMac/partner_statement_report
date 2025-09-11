@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 import base64
-from urllib.parse import quote
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from datetime import date, timedelta
@@ -25,8 +23,19 @@ class PartnerStatementWizard(models.TransientModel):
     date_to = fields.Date('Hasta', required=True, default=fields.Date.today)
     partner_ids = fields.Many2many('res.partner', string='Clientes', required=True, default=lambda self: self.env.context.get('active_ids', []) if self.env.context.get('active_model') == 'res.partner' else [])
 
-    computed_download_link = fields.Char('Enlace de Descarga', store=False)
-    computed_expiration_days = fields.Integer('Días de Expiración', store=False)
+    # --- CORRECCIÓN: Definición única y correcta de los campos. ---
+    # Se eliminaron las definiciones duplicadas. `store=True` es necesario para que 
+    # los valores persistan y puedan ser leídos por el motor de plantillas.
+    computed_download_link = fields.Char(
+        'Enlace de Descarga', 
+        store=True,
+        help="URL de descarga temporal para el estado de cuenta"
+    )
+    computed_expiration_days = fields.Integer(
+        'Días de Expiración', 
+        store=True,
+        help="Número de días que el enlace permanecerá activo"
+    )
 
     @api.onchange('date_range_option')
     def _onchange_date_range_option(self):
@@ -88,71 +97,56 @@ class PartnerStatementWizard(models.TransientModel):
         return pdf_content, filename
     
     def action_send_whatsapp(self):
-            """Abrir wizard de WhatsApp con plantilla renderizada."""
-            self.ensure_one()
-            if len(self.partner_ids) != 1:
-                raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
-            
-            partner = self.partner_ids[0]
-            
-            # Generar PDF y crear attachment
-            pdf_content, filename = self._generate_statement_pdf()
-            attachment = self.env['ir.attachment'].create({
-                'name': filename, 
-                'type': 'binary', 
-                'datas': base64.b64encode(pdf_content),
-                'res_model': self._name, 
-                'res_id': self.id, 
-                'mimetype': 'application/pdf',
-            })
+        """Abrir wizard de WhatsApp con plantilla renderizada."""
+        self.ensure_one()
+        if len(self.partner_ids) != 1:
+            raise UserError(_('Para enviar por WhatsApp, por favor seleccione solo un cliente a la vez.'))
+        
+        partner = self.partner_ids[0]
+        
+        # Generar PDF y crear attachment
+        pdf_content, filename = self._generate_statement_pdf()
+        attachment = self.env['ir.attachment'].create({
+            'name': filename, 
+            'type': 'binary', 
+            'datas': base64.b64encode(pdf_content),
+            'res_model': self._name, 
+            'res_id': self.id, 
+            'mimetype': 'application/pdf',
+        })
 
-            # Crear enlace de descarga
-            Link = self.env['statement.download.link']
-            download_link = Link.create_statement_link(attachment, partner)
-            
-            # Generar URL completa
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-            if base_url and base_url.startswith('http://'):
-                base_url = base_url.replace('http://', 'https://')
-            full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
+        # Crear enlace de descarga
+        Link = self.env['statement.download.link']
+        download_link = Link.create_statement_link(attachment, partner)
+        
+        # Generar URL completa
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        if base_url and base_url.startswith('http://'):
+            base_url = base_url.replace('http://', 'https://')
+        full_download_url = f"{base_url}/statement/download/{download_link.access_token}"
 
-            # IMPORTANTE: Actualizar campos computados en el wizard actual
-            self.write({
-                'computed_download_link': full_download_url,
-                'computed_expiration_days': self.company_id.statement_link_expiration_days or 7
-            })
-            
-            # Hacer commit para asegurar que los cambios estén guardados antes del renderizado
-            self.env.cr.commit()
-            
-            ctx = {
-                'default_partner_id': partner.id,
-                'active_wizard_id': self.id,  # Pasar el ID del wizard actual
-            }
-            
-            return {
-                'type': 'ir.actions.act_window',
-                'name': 'Enviar Estado de Cuenta por WhatsApp',
-                'res_model': 'whatsapp.statement.wizard',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': ctx,
-            }
-# Agregar estos campos al final de la clase PartnerStatementWizard
-    
-    computed_download_link = fields.Char(
-        'Enlace de Descarga', 
-        store=True,  # Cambiar a True para persistir
-        help="URL de descarga temporal para el estado de cuenta"
-    )
-    computed_expiration_days = fields.Integer(
-        'Días de Expiración', 
-        store=True,  # Cambiar a True para persistir
-        help="Número de días que el enlace permanecerá activo"
-    )
-    
-    @api.depends('company_id')
-    def _compute_expiration_days(self):
-        """Computar días de expiración basado en configuración de la compañía."""
-        for wizard in self:
-            wizard.computed_expiration_days = wizard.company_id.statement_link_expiration_days or 7
+        # Escribir los valores en los campos computados
+        self.write({
+            'computed_download_link': full_download_url,
+            'computed_expiration_days': self.company_id.statement_link_expiration_days or 7
+        })
+        
+        # --- CORRECCIÓN: Usar flush_model() en lugar de commit() ---
+        # `flush_model` fuerza la escritura de los valores al a DB dentro de la transacción actual,
+        # haciéndolos disponibles para lecturas posteriores (como el renderizado de la plantilla)
+        # sin los riesgos de `commit()`.
+        self.flush_model(['computed_download_link', 'computed_expiration_days'])
+        
+        ctx = {
+            'default_partner_id': partner.id,
+            'active_wizard_id': self.id,  # Pasar el ID del wizard actual
+        }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Enviar Estado de Cuenta por WhatsApp',
+            'res_model': 'whatsapp.statement.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': ctx,
+        }
